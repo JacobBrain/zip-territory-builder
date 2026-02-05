@@ -1,26 +1,702 @@
 @import "tailwindcss";
 
+/* ==================== Arachnid Works Brand Colors ==================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --aw-claret: #8C2433;
+  --aw-claret-dark: #6B1C28;
+  --aw-oxford-blue: #0C1B32;
+  --aw-french-gray: #ADAEBA;
+  --aw-burnt-sienna: #EC7B57;
+  --aw-earth-yellow: #F4B860;
+  --aw-sea-green: #05B5A9;
+  --white: #FFFFFF;
+  --off-white: #FAFAFA;
+  --light-bg: #F5F5F7;
+  --text-dark: #1a1a1a;
+  --text-muted: #6B7280;
+  --border-light: #E5E7EB;
+  --unassigned-fill: #E5E5E5;
+  --unassigned-border: #999999;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-aw-claret: #8C2433;
+  --color-aw-claret-dark: #6B1C28;
+  --color-aw-oxford-blue: #0C1B32;
+  --color-aw-french-gray: #ADAEBA;
+  --color-aw-burnt-sienna: #EC7B57;
+  --color-aw-sea-green: #05B5A9;
+  --color-off-white: #FAFAFA;
+  --color-border-light: #E5E7EB;
+  --color-text-muted: #6B7280;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+  overflow: hidden;
+}
+
+/* ==================== Layout ==================== */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.app-header {
+  height: 56px;
+  min-height: 56px;
+  background-color: var(--aw-oxford-blue);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  z-index: 1000;
+}
+
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app-header-logo {
+  height: 28px;
+  width: auto;
+}
+
+.app-header-title {
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.app-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ==================== Header Buttons ==================== */
+.header-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.header-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: white;
+}
+
+.header-btn-primary {
+  background: var(--aw-claret);
+  border-color: var(--aw-claret);
+  color: white;
+}
+
+.header-btn-primary:hover {
+  background: var(--aw-claret-dark);
+  border-color: var(--aw-claret-dark);
+}
+
+/* ==================== Sidebar ==================== */
+.sidebar {
+  width: 320px;
+  min-width: 320px;
+  background: white;
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-section {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-section-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ==================== Location List ==================== */
+.location-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-light);
+  transition: background 0.1s ease;
+}
+
+.location-item:hover {
+  background: #f9fafb;
+}
+
+.location-item.active {
+  background: rgba(140, 36, 51, 0.06);
+  border-left: 3px solid var(--aw-claret);
+  padding-left: calc(1rem - 3px);
+}
+
+.location-color-dot {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.location-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.location-item-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.location-item-meta {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.location-item-actions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.location-item:hover .location-item-actions {
+  opacity: 1;
+}
+
+.location-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--text-muted);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.location-action-btn:hover {
+  color: var(--aw-claret);
+  background: rgba(140, 36, 51, 0.08);
+}
+
+/* ==================== Radius Panel ==================== */
+.radius-panel {
+  padding: 0.5rem 1rem 0.625rem 1rem;
+  background: #f9fafb;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.radius-panel-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.375rem;
+}
+
+.radius-panel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.radius-input {
+  width: 80px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  font-size: 0.8125rem;
+  text-align: center;
+  color: var(--text-dark);
+  background: white;
+}
+
+.radius-input:focus {
+  outline: none;
+  border-color: var(--aw-claret);
+  box-shadow: 0 0 0 2px rgba(140, 36, 51, 0.08);
+}
+
+.radius-unit {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.radius-panel-buttons {
+  display: flex;
+  gap: 0.375rem;
+}
+
+/* ==================== Add Location Form ==================== */
+.add-location-toggle {
+  width: 100%;
+  background: none;
+  border: 1px dashed var(--border-light);
+  padding: 0.5rem;
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.add-location-toggle:hover {
+  border-color: var(--aw-claret);
+  color: var(--aw-claret);
+  background: rgba(140, 36, 51, 0.03);
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.add-form input {
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: var(--text-dark);
+  background: var(--off-white);
+  transition: border-color 0.15s;
+}
+
+.add-form input::placeholder {
+  color: var(--aw-french-gray);
+}
+
+.add-form input:focus {
+  outline: none;
+  border-color: var(--aw-claret);
+  box-shadow: 0 0 0 2px rgba(140, 36, 51, 0.08);
+  background: white;
+}
+
+.add-form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.btn-sm-primary {
+  background: var(--aw-claret);
+  color: white;
+}
+
+.btn-sm-primary:hover {
+  background: var(--aw-claret-dark);
+}
+
+.btn-sm-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-sm-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+}
+
+.btn-sm-ghost:hover {
+  background: #f9fafb;
+}
+
+/* ==================== Statistics ==================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.stat-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+/* ==================== Map Container ==================== */
+.map-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-wrapper .leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ==================== Status Bar ==================== */
+.status-bar {
+  height: 32px;
+  min-height: 32px;
+  background: white;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  z-index: 1000;
+}
+
+.status-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-bar-center {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.6875rem;
+}
+
+.status-indicator-active {
+  background: rgba(140, 36, 51, 0.1);
+  color: var(--aw-claret);
+}
+
+.status-indicator-eraser {
+  background: rgba(236, 123, 87, 0.15);
+  color: var(--aw-burnt-sienna);
+}
+
+/* ==================== Modal Overlay ==================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.modal-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--text-dark);
+}
+
+.modal-body {
+  padding: 1.25rem;
+}
+
+.modal-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* ==================== CSV Upload ==================== */
+.csv-dropzone {
+  border: 2px dashed var(--border-light);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.csv-dropzone:hover,
+.csv-dropzone.dragging {
+  border-color: var(--aw-claret);
+  background: rgba(140, 36, 51, 0.03);
+}
+
+.csv-dropzone-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.csv-dropzone-hint {
+  font-size: 0.75rem;
+  color: var(--aw-french-gray);
+  margin-top: 0.25rem;
+}
+
+/* ==================== Geocoding Progress ==================== */
+.geocoding-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: var(--border-light);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--aw-claret);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-status {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.progress-list {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.8125rem;
+}
+
+.progress-list li {
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.progress-success {
+  color: var(--aw-sea-green);
+}
+
+.progress-error {
+  color: var(--aw-claret);
+}
+
+.progress-pending {
+  color: var(--text-muted);
+}
+
+/* ==================== Toast Notifications ==================== */
+.toast-container {
+  position: fixed;
+  top: 68px;
+  right: 1rem;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  background: white;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 250px;
+  animation: slideIn 0.2s ease;
+}
+
+.toast-success {
+  border-left: 3px solid var(--aw-sea-green);
+}
+
+.toast-error {
+  border-left: 3px solid var(--aw-claret);
+}
+
+.toast-info {
+  border-left: 3px solid var(--aw-oxford-blue);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ==================== Empty State ==================== */
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.empty-state-text {
+  font-size: 0.75rem;
+}
+
+/* ==================== Leaflet Overrides ==================== */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+.leaflet-control-zoom a {
+  border-radius: 6px !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 16px !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+  margin: 0.75rem 1rem;
+  font-size: 0.8125rem;
 }
