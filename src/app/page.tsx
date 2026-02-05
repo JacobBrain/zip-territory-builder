@@ -6,6 +6,7 @@ import { ToastProvider } from '@/app/components/UI/Toast';
 import Header from '@/app/components/Header';
 import Sidebar from '@/app/components/Sidebar/Sidebar';
 import StatusBar from '@/app/components/StatusBar';
+import WelcomeModal from '@/app/components/Modals/WelcomeModal';
 
 // Dynamic import for Leaflet (no SSR)
 const TerritoryMap = dynamic(
@@ -24,6 +25,7 @@ export default function Home() {
             <TerritoryMap />
           </div>
           <StatusBar />
+          <WelcomeModal />
         </div>
       </ToastProvider>
     </TerritoryProvider>
