@@ -25,11 +25,14 @@ const STATES = {
   sc: 'sc_south_carolina_zip_codes_geo.min.json',
   va: 'va_virginia_zip_codes_geo.min.json',
   vt: 'vt_vermont_zip_codes_geo.min.json',
+  al: 'al_alabama_zip_codes_geo.min.json',
+  oh: 'oh_ohio_zip_codes_geo.min.json',
+  wv: 'wv_west_virginia_zip_codes_geo.min.json',
 };
 
 mkdirSync(DEST, { recursive: true });
 
-console.log('Downloading GeoJSON files for 16 East Coast states...');
+console.log('Downloading GeoJSON files for 19 states...');
 
 const entries = Object.entries(STATES);
 // Download 4 at a time to avoid overwhelming the connection
