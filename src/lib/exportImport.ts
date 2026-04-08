@@ -1,4 +1,4 @@
-import type { TerritoryState, ExportData, Location } from '@/types';
+import type { TerritoryState, ExportData, Location, ZipToCityLookup } from '@/types';
 
 export function exportToJSON(state: TerritoryState): string {
   const totalAssignedZips = Object.keys(state.zipAssignments).length;
@@ -82,6 +82,54 @@ export function importFromJSON(jsonString: string): { success: boolean; state?: 
   } catch {
     return { success: false, error: 'Invalid JSON file' };
   }
+}
+
+export async function loadZipToCityLookup(): Promise<ZipToCityLookup> {
+  const response = await fetch('/data/zip-to-city.json');
+  if (!response.ok) {
+    throw new Error('Failed to load ZIP-to-city data. Run npm run prebuild first.');
+  }
+  return response.json();
+}
+
+export function exportToCityLookup(
+  state: TerritoryState,
+  zipToCityLookup: ZipToCityLookup
+): string {
+  // Build location ID → info map for fast lookup
+  const locationMap = new Map<string, { name: string; address: string }>();
+  for (const loc of state.locations) {
+    locationMap.set(loc.id, { name: loc.name, address: loc.address });
+  }
+
+  // Build city+state → Set<locationId> (deduplicates naturally)
+  const cityToLocationIds = new Map<string, Set<string>>();
+
+  for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
+    const cityState = zipToCityLookup[zipCode];
+    if (!cityState) continue;
+
+    if (!cityToLocationIds.has(cityState)) {
+      cityToLocationIds.set(cityState, new Set());
+    }
+    cityToLocationIds.get(cityState)!.add(locationId);
+  }
+
+  // Build sorted output
+  const sortedCities = [...cityToLocationIds.keys()].sort();
+  const result: Record<string, { locations: { name: string; address: string }[] }> = {};
+
+  for (const city of sortedCities) {
+    const locationIds = cityToLocationIds.get(city)!;
+    const locations = [...locationIds]
+      .map(id => locationMap.get(id))
+      .filter((loc): loc is { name: string; address: string } => loc != null)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    result[city] = { locations };
+  }
+
+  return JSON.stringify(result, null, 2);
 }
 
 export function downloadFile(content: string, filename: string, mimeType: string) {

@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useTerritory } from '@/lib/territoryState';
-import { exportToJSON, exportToCSV, importFromJSON, downloadFile, getExportFilename } from '@/lib/exportImport';
+import { exportToJSON, exportToCSV, exportToCityLookup, loadZipToCityLookup, importFromJSON, downloadFile, getExportFilename } from '@/lib/exportImport';
 import { useToast } from '@/app/components/UI/Toast';
 
 interface ImportModalProps {
@@ -78,6 +78,7 @@ interface ExportModalProps {
 export function ExportModal({ isOpen, onClose }: ExportModalProps) {
   const { state } = useTerritory();
   const { addToast } = useToast();
+  const [isLoadingCityLookup, setIsLoadingCityLookup] = useState(false);
 
   const handleExportJSON = () => {
     const json = exportToJSON(state);
@@ -91,6 +92,24 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
     downloadFile(csv, getExportFilename('csv'), 'text/csv');
     addToast('Exported as CSV', 'success');
     onClose();
+  };
+
+  const handleExportCityLookup = async () => {
+    setIsLoadingCityLookup(true);
+    try {
+      const zipToCityLookup = await loadZipToCityLookup();
+      const json = exportToCityLookup(state, zipToCityLookup);
+      const now = new Date();
+      const date = now.toISOString().slice(0, 10);
+      const time = now.toTimeString().slice(0, 8).replace(/:/g, '');
+      downloadFile(json, `city-lookup_${date}_${time}.json`, 'application/json');
+      addToast('Exported City Lookup JSON', 'success');
+      onClose();
+    } catch {
+      addToast('City lookup data not available. Ensure prebuild has run.', 'error');
+    } finally {
+      setIsLoadingCityLookup(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -125,6 +144,19 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
               <div style={{ fontWeight: 700 }}>CSV</div>
               <div style={{ fontSize: '0.6875rem', opacity: 0.8, marginTop: '0.125rem' }}>
                 For Excel / CRM import
+              </div>
+            </button>
+            <button
+              className="btn-sm btn-sm-ghost"
+              onClick={handleExportCityLookup}
+              disabled={isLoadingCityLookup}
+              style={{ flex: 1, padding: '0.75rem' }}
+            >
+              <div style={{ fontWeight: 700 }}>
+                {isLoadingCityLookup ? 'Loading...' : 'City Lookup'}
+              </div>
+              <div style={{ fontSize: '0.6875rem', opacity: 0.8, marginTop: '0.125rem' }}>
+                City → location mapping
               </div>
             </button>
           </div>

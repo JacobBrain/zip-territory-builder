@@ -40,6 +40,9 @@ yarn-error.log*
 # GeoJSON boundary data (too large for git, download via script)
 /public/geojson/
 
+# ZIP-to-city lookup data (generated via prebuild script)
+/public/data/
+
 # claude code
 .claude/
 

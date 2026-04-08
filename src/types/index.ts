@@ -70,6 +70,8 @@ export interface ExportData {
   };
 }
 
+export type ZipToCityLookup = Record<string, string>; // zipCode -> "City, ST"
+
 export interface CSVRow {
   name: string;
   address: string;
