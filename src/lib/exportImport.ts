@@ -115,18 +115,22 @@ export function exportToCityLookup(
     cityToLocationIds.get(cityState)!.add(locationId);
   }
 
-  // Build sorted output
+  // Build sorted output as array with separate city/state fields
   const sortedCities = [...cityToLocationIds.keys()].sort();
-  const result: Record<string, { locations: { name: string; address: string }[] }> = {};
+  const result: { city: string; state: string; locations: { name: string; address: string }[] }[] = [];
 
-  for (const city of sortedCities) {
-    const locationIds = cityToLocationIds.get(city)!;
+  for (const cityState of sortedCities) {
+    const lastComma = cityState.lastIndexOf(', ');
+    const city = lastComma !== -1 ? cityState.slice(0, lastComma) : cityState;
+    const state = lastComma !== -1 ? cityState.slice(lastComma + 2) : '';
+
+    const locationIds = cityToLocationIds.get(cityState)!;
     const locations = [...locationIds]
       .map(id => locationMap.get(id))
       .filter((loc): loc is { name: string; address: string } => loc != null)
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    result[city] = { locations };
+    result.push({ city, state, locations });
   }
 
   return JSON.stringify(result, null, 2);
