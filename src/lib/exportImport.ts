@@ -96,15 +96,16 @@ export function exportToCityLookup(
   state: TerritoryState,
   zipToCityLookup: ZipToCityLookup
 ): string {
-  // Build locations list sorted by name
-  const locations = [...state.locations]
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(loc => ({ id: Number(loc.id), name: loc.name }));
+  // Build locations list sorted by name, assigning stable numeric IDs
+  const sortedLocations = [...state.locations].sort((a, b) => a.name.localeCompare(b.name));
+  const idMap = new Map<string, number>();
+  sortedLocations.forEach((loc, i) => idMap.set(loc.id, i + 1));
+  const locations = sortedLocations.map(loc => ({ id: idMap.get(loc.id)!, name: loc.name }));
 
   // Build by_zip: zip code → array of numeric location IDs
   const byZip: Record<string, number[]> = {};
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
-    const numId = Number(locationId);
+    const numId = idMap.get(locationId)!;
     if (!byZip[zipCode]) {
       byZip[zipCode] = [numId];
     } else if (!byZip[zipCode].includes(numId)) {
@@ -124,7 +125,7 @@ export function exportToCityLookup(
 
     const cityKey = cityRaw.toLowerCase().replace(/\s+/g, '_');
     const stateKey = stateRaw.toLowerCase();
-    const numId = Number(locationId);
+    const numId = idMap.get(locationId)!;
 
     if (!byCity[cityKey]) {
       byCity[cityKey] = {};
