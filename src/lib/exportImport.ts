@@ -1,4 +1,5 @@
-import type { TerritoryState, ExportData, Location, ZipToCityLookup } from '@/types';
+import type { TerritoryState, ExportData, Location, ZipToCityLookup, LocationIdMapping } from '@/types';
+import locationIdMapping from './location-ids.json';
 
 export function exportToJSON(state: TerritoryState): string {
   const totalAssignedZips = Object.keys(state.zipAssignments).length;
@@ -96,16 +97,26 @@ export function exportToCityLookup(
   state: TerritoryState,
   zipToCityLookup: ZipToCityLookup
 ): string {
-  // Build locations list sorted by name, assigning stable numeric IDs
-  const sortedLocations = [...state.locations].sort((a, b) => a.name.localeCompare(b.name));
+  // Build internal ID → export numeric ID map using name-based mapping
   const idMap = new Map<string, number>();
-  sortedLocations.forEach((loc, i) => idMap.set(loc.id, i + 1));
+  for (const loc of state.locations) {
+    const numId = (locationIdMapping as LocationIdMapping)[loc.name];
+    if (numId != null) {
+      idMap.set(loc.id, numId);
+    }
+  }
+
+  // Build locations list sorted by name
+  const sortedLocations = [...state.locations]
+    .filter(loc => idMap.has(loc.id))
+    .sort((a, b) => a.name.localeCompare(b.name));
   const locations = sortedLocations.map(loc => ({ id: idMap.get(loc.id)!, name: loc.name }));
 
   // Build by_zip: zip code → array of numeric location IDs
   const byZip: Record<string, number[]> = {};
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
-    const numId = idMap.get(locationId)!;
+    const numId = idMap.get(locationId);
+    if (numId == null) continue;
     if (!byZip[zipCode]) {
       byZip[zipCode] = [numId];
     } else if (!byZip[zipCode].includes(numId)) {
@@ -116,6 +127,8 @@ export function exportToCityLookup(
   // Build by_city: lowercase_city → lowercase_state → array of numeric location IDs
   const byCity: Record<string, Record<string, number[]>> = {};
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
+    const numId = idMap.get(locationId);
+    if (numId == null) continue;
     const cityState = zipToCityLookup[zipCode];
     if (!cityState) continue;
 
@@ -125,7 +138,6 @@ export function exportToCityLookup(
 
     const cityKey = cityRaw.toLowerCase().replace(/\s+/g, '_');
     const stateKey = stateRaw.toLowerCase();
-    const numId = idMap.get(locationId)!;
 
     if (!byCity[cityKey]) {
       byCity[cityKey] = {};

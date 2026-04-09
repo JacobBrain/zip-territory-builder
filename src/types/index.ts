@@ -72,6 +72,8 @@ export interface ExportData {
 
 export type ZipToCityLookup = Record<string, string>; // zipCode -> "City, ST"
 
+export type LocationIdMapping = Record<string, number>; // locationName -> numeric export ID
+
 export interface CSVRow {
   name: string;
   address: string;
