@@ -102,8 +102,8 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
       const now = new Date();
       const date = now.toISOString().slice(0, 10);
       const time = now.toTimeString().slice(0, 8).replace(/:/g, '');
-      downloadFile(json, `city-lookup_${date}_${time}.json`, 'application/json');
-      addToast('Exported City Lookup JSON', 'success');
+      downloadFile(json, `location-lookup_${date}_${time}.json`, 'application/json');
+      addToast('Exported Location Lookup JSON', 'success');
       onClose();
     } catch {
       addToast('City lookup data not available. Ensure prebuild has run.', 'error');
@@ -153,7 +153,7 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
               style={{ flex: 1, padding: '0.75rem' }}
             >
               <div style={{ fontWeight: 700 }}>
-                {isLoadingCityLookup ? 'Loading...' : 'City Lookup'}
+                {isLoadingCityLookup ? 'Loading...' : 'Location Lookup'}
               </div>
               <div style={{ fontSize: '0.6875rem', opacity: 0.8, marginTop: '0.125rem' }}>
                 City → location mapping

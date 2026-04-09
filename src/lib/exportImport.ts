@@ -96,44 +96,54 @@ export function exportToCityLookup(
   state: TerritoryState,
   zipToCityLookup: ZipToCityLookup
 ): string {
-  // Build location ID → info map for fast lookup
-  const locationMap = new Map<string, { name: string; address: string }>();
-  for (const loc of state.locations) {
-    locationMap.set(loc.id, { name: loc.name, address: loc.address });
+  // Build locations list sorted by name
+  const locations = [...state.locations]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(loc => ({ id: Number(loc.id), name: loc.name }));
+
+  // Build by_zip: zip code → array of numeric location IDs
+  const byZip: Record<string, number[]> = {};
+  for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
+    const numId = Number(locationId);
+    if (!byZip[zipCode]) {
+      byZip[zipCode] = [numId];
+    } else if (!byZip[zipCode].includes(numId)) {
+      byZip[zipCode].push(numId);
+    }
   }
 
-  // Build city+state → Set<locationId> (deduplicates naturally)
-  const cityToLocationIds = new Map<string, Set<string>>();
-
+  // Build by_city: lowercase_city → lowercase_state → array of numeric location IDs
+  const byCity: Record<string, Record<string, number[]>> = {};
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
     const cityState = zipToCityLookup[zipCode];
     if (!cityState) continue;
 
-    if (!cityToLocationIds.has(cityState)) {
-      cityToLocationIds.set(cityState, new Set());
-    }
-    cityToLocationIds.get(cityState)!.add(locationId);
-  }
-
-  // Build sorted output as array with separate city/state fields
-  const sortedCities = [...cityToLocationIds.keys()].sort();
-  const result: { city: string; state: string; locations: { name: string; address: string }[] }[] = [];
-
-  for (const cityState of sortedCities) {
     const lastComma = cityState.lastIndexOf(', ');
-    const city = lastComma !== -1 ? cityState.slice(0, lastComma) : cityState;
-    const state = lastComma !== -1 ? cityState.slice(lastComma + 2) : '';
+    const cityRaw = lastComma !== -1 ? cityState.slice(0, lastComma) : cityState;
+    const stateRaw = lastComma !== -1 ? cityState.slice(lastComma + 2) : '';
 
-    const locationIds = cityToLocationIds.get(cityState)!;
-    const locations = [...locationIds]
-      .map(id => locationMap.get(id))
-      .filter((loc): loc is { name: string; address: string } => loc != null)
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const cityKey = cityRaw.toLowerCase().replace(/\s+/g, '_');
+    const stateKey = stateRaw.toLowerCase();
+    const numId = Number(locationId);
 
-    result.push({ city, state, locations });
+    if (!byCity[cityKey]) {
+      byCity[cityKey] = {};
+    }
+    if (!byCity[cityKey][stateKey]) {
+      byCity[cityKey][stateKey] = [];
+    }
+    if (!byCity[cityKey][stateKey].includes(numId)) {
+      byCity[cityKey][stateKey].push(numId);
+    }
   }
 
-  return JSON.stringify(result, null, 2);
+  // Sort by_city keys alphabetically
+  const sortedByCity: Record<string, Record<string, number[]>> = {};
+  for (const cityKey of Object.keys(byCity).sort()) {
+    sortedByCity[cityKey] = byCity[cityKey];
+  }
+
+  return JSON.stringify({ locations, by_zip: byZip, by_city: sortedByCity }, null, 2);
 }
 
 export function downloadFile(content: string, filename: string, mimeType: string) {
