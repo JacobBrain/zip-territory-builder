@@ -93,42 +93,85 @@ export async function loadZipToCityLookup(): Promise<ZipToCityLookup> {
   return response.json();
 }
 
+// Full US state name → USPS abbreviation. Used so "Tampa, Florida" matches "Tampa, FL".
+const US_STATE_ABBREV: Record<string, string> = {
+  alabama: 'al', alaska: 'ak', arizona: 'az', arkansas: 'ar', california: 'ca',
+  colorado: 'co', connecticut: 'ct', delaware: 'de', florida: 'fl', georgia: 'ga',
+  hawaii: 'hi', idaho: 'id', illinois: 'il', indiana: 'in', iowa: 'ia',
+  kansas: 'ks', kentucky: 'ky', louisiana: 'la', maine: 'me', maryland: 'md',
+  massachusetts: 'ma', michigan: 'mi', minnesota: 'mn', mississippi: 'ms', missouri: 'mo',
+  montana: 'mt', nebraska: 'ne', nevada: 'nv', 'new hampshire': 'nh', 'new jersey': 'nj',
+  'new mexico': 'nm', 'new york': 'ny', 'north carolina': 'nc', 'north dakota': 'nd',
+  ohio: 'oh', oklahoma: 'ok', oregon: 'or', pennsylvania: 'pa', 'rhode island': 'ri',
+  'south carolina': 'sc', 'south dakota': 'sd', tennessee: 'tn', texas: 'tx', utah: 'ut',
+  vermont: 'vt', virginia: 'va', washington: 'wa', 'west virginia': 'wv',
+  wisconsin: 'wi', wyoming: 'wy', 'district of columbia': 'dc',
+};
+
+// Normalize a territory name so trailing "*", casing, whitespace, and full state names
+// don't prevent a match against location-ids.json keys.
+function normalizeLocationName(name: string): string {
+  const base = name.trim().toLowerCase().replace(/\*+$/, '').trim();
+  const lastComma = base.lastIndexOf(',');
+  if (lastComma === -1) return base;
+  const city = base.slice(0, lastComma).trim();
+  const state = base.slice(lastComma + 1).trim().replace(/\*+$/, '').trim();
+  const abbrev = US_STATE_ABBREV[state] ?? state;
+  return `${city}, ${abbrev}`;
+}
+
+export interface CityLookupExport {
+  json: string;
+  unmappedNames: string[];
+}
+
 export function exportToCityLookup(
   state: TerritoryState,
   zipToCityLookup: ZipToCityLookup
-): string {
-  // Build internal ID → export numeric ID map using name-based mapping
-  const idMap = new Map<string, number>();
+): CityLookupExport {
+  // Build normalized-name → numeric ID lookup so minor naming drift (trailing *,
+  // "Florida" vs "FL", casing, whitespace) doesn't cause a territory to be dropped.
+  const idLookup = new Map<string, number>();
+  for (const [key, numId] of Object.entries(locationIdMapping as LocationIdMapping)) {
+    idLookup.set(normalizeLocationName(key), numId);
+  }
+
+  // Map each territory's internal ID to either a numeric export ID or a string
+  // placeholder "unknown:<name>" so unmapped territories are visible in the export
+  // instead of silently dropped.
+  const idMap = new Map<string, number | string>();
+  const unmappedNames: string[] = [];
   for (const loc of state.locations) {
-    const numId = (locationIdMapping as LocationIdMapping)[loc.name];
+    const numId = idLookup.get(normalizeLocationName(loc.name));
     if (numId != null) {
       idMap.set(loc.id, numId);
+    } else {
+      idMap.set(loc.id, `unknown:${loc.name}`);
+      unmappedNames.push(loc.name);
     }
   }
 
   // Build locations list sorted by name
-  const sortedLocations = [...state.locations]
-    .filter(loc => idMap.has(loc.id))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const sortedLocations = [...state.locations].sort((a, b) => a.name.localeCompare(b.name));
   const locations = sortedLocations.map(loc => ({ id: idMap.get(loc.id)!, name: loc.name }));
 
-  // Build by_zip: zip code → array of numeric location IDs
-  const byZip: Record<string, number[]> = {};
+  // Build by_zip: zip code → array of export IDs (number, or "unknown:<name>" string)
+  const byZip: Record<string, Array<number | string>> = {};
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
-    const numId = idMap.get(locationId);
-    if (numId == null) continue;
+    const exportId = idMap.get(locationId);
+    if (exportId == null) continue;
     if (!byZip[zipCode]) {
-      byZip[zipCode] = [numId];
-    } else if (!byZip[zipCode].includes(numId)) {
-      byZip[zipCode].push(numId);
+      byZip[zipCode] = [exportId];
+    } else if (!byZip[zipCode].includes(exportId)) {
+      byZip[zipCode].push(exportId);
     }
   }
 
-  // Build by_city: lowercase_city → lowercase_state → array of numeric location IDs
-  const byCity: Record<string, Record<string, number[]>> = {};
+  // Build by_city: lowercase_city → lowercase_state → array of export IDs
+  const byCity: Record<string, Record<string, Array<number | string>>> = {};
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
-    const numId = idMap.get(locationId);
-    if (numId == null) continue;
+    const exportId = idMap.get(locationId);
+    if (exportId == null) continue;
     const cityState = zipToCityLookup[zipCode];
     if (!cityState) continue;
 
@@ -145,18 +188,19 @@ export function exportToCityLookup(
     if (!byCity[cityKey][stateKey]) {
       byCity[cityKey][stateKey] = [];
     }
-    if (!byCity[cityKey][stateKey].includes(numId)) {
-      byCity[cityKey][stateKey].push(numId);
+    if (!byCity[cityKey][stateKey].includes(exportId)) {
+      byCity[cityKey][stateKey].push(exportId);
     }
   }
 
   // Sort by_city keys alphabetically
-  const sortedByCity: Record<string, Record<string, number[]>> = {};
+  const sortedByCity: Record<string, Record<string, Array<number | string>>> = {};
   for (const cityKey of Object.keys(byCity).sort()) {
     sortedByCity[cityKey] = byCity[cityKey];
   }
 
-  return JSON.stringify({ locations, by_zip: byZip, by_city: sortedByCity }, null, 2);
+  const json = JSON.stringify({ locations, by_zip: byZip, by_city: sortedByCity }, null, 2);
+  return { json, unmappedNames };
 }
 
 export function downloadFile(content: string, filename: string, mimeType: string) {

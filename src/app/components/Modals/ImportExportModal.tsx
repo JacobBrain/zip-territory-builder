@@ -98,12 +98,18 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
     setIsLoadingCityLookup(true);
     try {
       const zipToCityLookup = await loadZipToCityLookup();
-      const json = exportToCityLookup(state, zipToCityLookup);
+      const { json, unmappedNames } = exportToCityLookup(state, zipToCityLookup);
       const now = new Date();
       const date = now.toISOString().slice(0, 10);
       const time = now.toTimeString().slice(0, 8).replace(/:/g, '');
       downloadFile(json, `location-lookup_${date}_${time}.json`, 'application/json');
       addToast('Exported Location Lookup JSON', 'success');
+      if (unmappedNames.length > 0) {
+        addToast(
+          `${unmappedNames.length} territor${unmappedNames.length === 1 ? 'y' : 'ies'} exported with "unknown" ID — add to location-ids.json: ${unmappedNames.join(', ')}`,
+          'info',
+        );
+      }
       onClose();
     } catch {
       addToast('City lookup data not available. Ensure prebuild has run.', 'error');
