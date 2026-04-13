@@ -199,7 +199,15 @@ export function exportToCityLookup(
     sortedByCity[cityKey] = byCity[cityKey];
   }
 
-  const json = JSON.stringify({ locations, by_zip: byZip, by_city: sortedByCity }, null, 2);
+  // Include an `_unmapped` top-level array only when there are territories without
+  // a WordPress ID mapping. Travels with the file so anyone who opens it (dev, client)
+  // sees the same list that was shown in the UI at export time.
+  const payload: Record<string, unknown> = { locations, by_zip: byZip, by_city: sortedByCity };
+  if (unmappedNames.length > 0) {
+    payload._unmapped = unmappedNames;
+  }
+
+  const json = JSON.stringify(payload, null, 2);
   return { json, unmappedNames };
 }
 
