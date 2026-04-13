@@ -35,6 +35,8 @@ export const STATE_BOUNDS: Record<string, StateBounds> = {
   oh: { north: 42.32, south: 38.40, east: -80.52, west: -84.82 },
   wv: { north: 40.64, south: 37.20, east: -77.72, west: -82.64 },
   al: { north: 35.01, south: 30.22, east: -84.89, west: -88.47 },
+  ky: { north: 39.15, south: 36.50, east: -81.96, west: -89.57 },
+  tn: { north: 36.68, south: 34.98, east: -81.65, west: -90.31 },
 };
 
 const STATE_FILES: Record<string, string> = {
@@ -57,6 +59,8 @@ const STATE_FILES: Record<string, string> = {
   oh: '/geojson/oh.json',
   wv: '/geojson/wv.json',
   al: '/geojson/al.json',
+  ky: '/geojson/ky.json',
+  tn: '/geojson/tn.json',
 };
 
 // In-memory cache of loaded state data
