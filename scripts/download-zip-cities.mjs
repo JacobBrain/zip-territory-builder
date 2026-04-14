@@ -45,7 +45,7 @@ for (const line of tsv.split('\n')) {
   const city = cols[2];
   const state = cols[4];
   if (zip && city && state) {
-    lookup[zip] = `${city}, ${state}`;
+    lookup[zip] = { city: `${city}, ${state}`, lat: parseFloat(cols[9]) || 0, lng: parseFloat(cols[10]) || 0 };
   }
 }
 

@@ -70,7 +70,7 @@ export interface ExportData {
   };
 }
 
-export type ZipToCityLookup = Record<string, string>; // zipCode -> "City, ST"
+export type ZipToCityLookup = Record<string, { city: string; lat: number; lng: number }>;
 
 export type LocationIdMapping = Record<string, number>; // locationName -> numeric export ID
 

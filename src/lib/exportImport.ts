@@ -1,5 +1,44 @@
+import type { Polygon, MultiPolygon } from 'geojson';
 import type { TerritoryState, ExportData, Location, ZipToCityLookup, LocationIdMapping } from '@/types';
+import { loadStateGeoJSON, STATE_BOUNDS } from './zipBoundaries';
+import type { ZipFeature } from './zipBoundaries';
 import locationIdMapping from './location-ids.json';
+
+// Ray-casting algorithm: returns true when [lng, lat] is inside the ring.
+function pointInRing(lng: number, lat: number, ring: number[][]): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+// True when [lng, lat] falls inside the geometry (handles holes and MultiPolygon).
+function pointInGeometry(lng: number, lat: number, geometry: Polygon | MultiPolygon): boolean {
+  const polygons = geometry.type === 'Polygon'
+    ? [geometry.coordinates]
+    : geometry.coordinates;
+  for (const rings of polygons) {
+    if (!pointInRing(lng, lat, rings[0])) continue;
+    let inHole = false;
+    for (let h = 1; h < rings.length; h++) {
+      if (pointInRing(lng, lat, rings[h])) { inHole = true; break; }
+    }
+    if (!inHole) return true;
+  }
+  return false;
+}
+
+// Load every state's GeoJSON features in parallel.
+async function loadAllStateFeatures(): Promise<ZipFeature[]> {
+  const codes = Object.keys(STATE_BOUNDS);
+  const results = await Promise.all(codes.map(c => loadStateGeoJSON(c)));
+  return results.flat();
+}
 
 export function exportToJSON(state: TerritoryState): string {
   const totalAssignedZips = Object.keys(state.zipAssignments).length;
@@ -125,10 +164,10 @@ export interface CityLookupExport {
   unmappedNames: string[];
 }
 
-export function exportToCityLookup(
+export async function exportToCityLookup(
   state: TerritoryState,
   zipToCityLookup: ZipToCityLookup
-): CityLookupExport {
+): Promise<CityLookupExport> {
   // Build normalized-name → numeric ID lookup so minor naming drift (trailing *,
   // "Florida" vs "FL", casing, whitespace) doesn't cause a territory to be dropped.
   const idLookup = new Map<string, number>();
@@ -172,8 +211,9 @@ export function exportToCityLookup(
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
     const exportId = idMap.get(locationId);
     if (exportId == null) continue;
-    const cityState = zipToCityLookup[zipCode];
-    if (!cityState) continue;
+    const entry = zipToCityLookup[zipCode];
+    if (!entry) continue;
+    const cityState = entry.city;
 
     const lastComma = cityState.lastIndexOf(', ');
     const cityRaw = lastComma !== -1 ? cityState.slice(0, lastComma) : cityState;
@@ -190,6 +230,45 @@ export function exportToCityLookup(
     }
     if (!byCity[cityKey][stateKey].includes(exportId)) {
       byCity[cityKey][stateKey].push(exportId);
+    }
+  }
+
+  // Backfill by_zip: ZIPs without Census boundaries (PO Box / unique ZIPs) won't
+  // appear on the map and can't be painted, but they're valid addresses. For each
+  // such ZIP we check whether its coordinates fall inside an assigned ZIP's polygon
+  // and, if so, assign it to the same territory.
+  const allFeatures = await loadAllStateFeatures();
+
+  // Build a quick lookup: zipCode → territoryExportId for assigned zips
+  const assignedZipExportId = new Map<string, Array<number | string>>();
+  for (const [zipCode, ids] of Object.entries(byZip)) {
+    assignedZipExportId.set(zipCode, ids);
+  }
+
+  // Index features that belong to an assigned territory, with their bounds for fast rejection
+  const assignedFeatures: { feature: ZipFeature; exportIds: Array<number | string> }[] = [];
+  for (const feat of allFeatures) {
+    const ids = assignedZipExportId.get(feat.zipCode);
+    if (ids) {
+      assignedFeatures.push({ feature: feat, exportIds: ids });
+    }
+  }
+
+  // Check each unassigned ZIP's coordinates against assigned polygons
+  for (const [zipCode, entry] of Object.entries(zipToCityLookup)) {
+    if (byZip[zipCode]) continue; // already assigned
+    const { lat, lng } = entry;
+    if (!lat && !lng) continue;
+
+    for (const { feature, exportIds } of assignedFeatures) {
+      // Fast bounding-box rejection
+      const b = feature.bounds;
+      if (lat < b.south || lat > b.north || lng < b.west || lng > b.east) continue;
+
+      if (pointInGeometry(lng, lat, feature.geometry)) {
+        byZip[zipCode] = [...exportIds];
+        break;
+      }
     }
   }
 

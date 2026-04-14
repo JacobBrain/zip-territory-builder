@@ -104,7 +104,7 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
     setIsLoadingCityLookup(true);
     try {
       const zipToCityLookup = await loadZipToCityLookup();
-      const { json, unmappedNames } = exportToCityLookup(state, zipToCityLookup);
+      const { json, unmappedNames } = await exportToCityLookup(state, zipToCityLookup);
       const now = new Date();
       const date = now.toISOString().slice(0, 10);
       const time = now.toTimeString().slice(0, 8).replace(/:/g, '');

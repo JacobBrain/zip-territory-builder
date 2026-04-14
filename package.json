@@ -7,7 +7,8 @@
     "prebuild": "node scripts/download-geojson.mjs && node scripts/download-zip-cities.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -29,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.4"
   }
 }
