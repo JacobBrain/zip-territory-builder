@@ -51,6 +51,9 @@ export default function StatusBar() {
         <span style={{ fontSize: '0.6875rem', color: 'var(--aw-french-gray)' }}>
           Shift+Drag to paint
         </span>
+        <span style={{ fontSize: '0.6875rem', color: 'var(--aw-french-gray)', opacity: 0.6 }}>
+          v1.5
+        </span>
       </div>
     </div>
   );
