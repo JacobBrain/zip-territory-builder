@@ -5,8 +5,10 @@
   "Bohemia, NY": 2502,
   "Buffalo, NY": 2286,
   "Calverton, NY": 2312,
+  "CANCO, SC": 3605,
   "Dover, DE": 2301,
   "Harrisburg, PA*": 2308,
+  "HAZ~MAT, NC": 3604,
   "Hudson Valley, NY*": 2309,
   "Mannington, NJ": 2314,
   "North Jersey": 2319,
@@ -21,5 +23,6 @@
   "Waterworks - Newburgh, NY Facility": 3548,
   "Williamsport, PA": 2343,
   "Woodston, NJ Facility": 2345,
+  "Woodstown, NJ Facility": 2345,
   "Youngstown, OH*": 2347
 }
