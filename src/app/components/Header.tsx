@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import AppHeader from './AppHeader';
 import CSVUploadModal from './Modals/CSVUploadModal';
 import { ImportModal, ExportModal } from './Modals/ImportExportModal';
 
@@ -11,31 +12,26 @@ export default function Header() {
 
   return (
     <>
-      <header className="app-header">
-        <div className="app-header-left">
-          <span className="app-header-title">Zip Territory Builder</span>
-        </div>
-        <div className="app-header-actions">
-          <button
-            className="header-btn header-btn-primary"
-            onClick={() => setShowCSVUpload(true)}
-          >
-            Upload CSV
-          </button>
-          <button
-            className="header-btn"
-            onClick={() => setShowImport(true)}
-          >
-            Import
-          </button>
-          <button
-            className="header-btn"
-            onClick={() => setShowExport(true)}
-          >
-            Export
-          </button>
-        </div>
-      </header>
+      <AppHeader title="Zip Territory Builder">
+        <button
+          className="header-btn header-btn-primary"
+          onClick={() => setShowCSVUpload(true)}
+        >
+          Upload CSV
+        </button>
+        <button
+          className="header-btn"
+          onClick={() => setShowImport(true)}
+        >
+          Import
+        </button>
+        <button
+          className="header-btn"
+          onClick={() => setShowExport(true)}
+        >
+          Export
+        </button>
+      </AppHeader>
 
       <CSVUploadModal isOpen={showCSVUpload} onClose={() => setShowCSVUpload(false)} />
       <ImportModal isOpen={showImport} onClose={() => setShowImport(false)} />

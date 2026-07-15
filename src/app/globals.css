@@ -94,6 +94,36 @@ body {
   overflow: hidden;
 }
 
+/* ==================== Header Nav ==================== */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 0.75rem;
+  padding-left: 0.875rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.header-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.3125rem 0.625rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.header-nav-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.header-nav-link.active {
+  color: white;
+  background: var(--aw-claret);
+}
+
 /* ==================== Header Buttons ==================== */
 .header-btn {
   background: transparent;
@@ -760,4 +790,311 @@ body {
 .leaflet-popup-content {
   margin: 0.75rem 1rem;
   font-size: 0.8125rem;
+}
+
+/* ==================== Utility Detail Panel (/utility) ==================== */
+.utility-detail {
+  margin: 0 0.75rem 0.5rem;
+  padding: 0.625rem 0.75rem;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.utility-detail-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.375rem;
+}
+
+.utility-detail-label {
+  flex: 0 0 92px;
+  color: #9CA3AF;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.625rem;
+  letter-spacing: 0.03em;
+  padding-top: 1px;
+}
+
+.utility-detail-note {
+  margin: 0.375rem 0;
+  padding: 0.375rem 0.5rem;
+  background: #FEF9EC;
+  border-left: 3px solid var(--aw-earth-yellow);
+  border-radius: 4px;
+  color: #6B7280;
+}
+
+.utility-detail-links {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.utility-detail-links a {
+  color: var(--aw-claret);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.utility-detail-links a:hover {
+  text-decoration: underline;
+}
+
+/* ==================== Field Locations Legend (/utility) ==================== */
+.field-legend {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.6875rem;
+  color: #374151;
+  line-height: 1.7;
+  max-width: 230px;
+}
+
+.field-legend-title {
+  font-weight: 700;
+  font-size: 0.6875rem;
+  color: var(--aw-oxford-blue);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.field-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.field-legend-dot {
+  width: 9px;
+  height: 9px;
+  min-width: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.field-legend-plant {
+  width: 13px;
+  height: 13px;
+  min-width: 13px;
+  background: var(--aw-french-gray);
+}
+
+.field-stats {
+  margin: 0 0.75rem 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(5, 181, 169, 0.07);
+  border: 1px solid rgba(5, 181, 169, 0.3);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* ==================== Floating Map Panels (/utility) ==================== */
+.map-wrapper {
+  position: relative;
+}
+
+.map-panel {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
+  pointer-events: auto;
+}
+
+.map-panel-stack {
+  position: absolute;
+  top: 12px;
+  left: 54px; /* clear of leaflet zoom/fit controls */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 320px;
+  max-height: calc(100% - 24px);
+}
+
+.utility-finder {
+  position: relative;
+  padding: 6px;
+}
+
+.utility-finder-input {
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--border-light);
+  border-radius: 7px;
+  font-size: 0.8125rem;
+  color: var(--text-dark);
+  background: var(--off-white);
+}
+
+.utility-finder-input:focus {
+  outline: none;
+  border-color: var(--aw-claret);
+  box-shadow: 0 0 0 2px rgba(140, 36, 51, 0.08);
+}
+
+.utility-finder-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 1100;
+}
+
+.utility-finder-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.7rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.utility-finder-row:last-child {
+  border-bottom: none;
+}
+
+.utility-finder-row:hover,
+.utility-finder-row.highlighted {
+  background: #f3f4f6;
+}
+
+.utility-finder-row.selected {
+  background: rgba(140, 36, 51, 0.06);
+}
+
+.utility-finder-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.utility-finder-meta {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.utility-info-card {
+  padding: 0.75rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 62vh;
+}
+
+.utility-info-card .field-stats {
+  margin: 8px 0;
+}
+
+.utility-info-card .utility-detail {
+  margin: 0;
+}
+
+.utility-info-scroll {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.utility-info-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.utility-info-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+.utility-info-meta {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.utility-info-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 0.25rem;
+  border-radius: 4px;
+}
+
+.utility-info-close:hover {
+  color: var(--aw-claret);
+  background: rgba(140, 36, 51, 0.08);
+}
+
+.layers-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.layers-toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.layers-toolbar-checks {
+  gap: 0.75rem;
+}
+
+.layers-toolbar-checks label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.field-legend-line {
+  width: 14px;
+  height: 0;
+  border-top: 2px solid #64748B;
+  display: inline-block;
+}
+
+.field-legend-ring {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  border: 2px dashed #2E7D32;
+  border-radius: 50%;
+  display: inline-block;
 }

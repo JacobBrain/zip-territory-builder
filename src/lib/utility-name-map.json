@@ -1,0 +1,780 @@
+{
+  "_comment": "Bridges the client-provided utility list (Jeff Landis, MEG - 'List of Utilities East of Mississippi.xlsx') to EIA utility IDs in the HIFLD/EIA Electric Retail Service Territories dataset. eiaIds are Form EIA-861 utility IDs (stable). eiaNames are for human validation - the download script fails if an ID's NAME does not match. clientNames preserves the exact spelling(s) from Jeff's list, including typos.",
+  "utilities": [
+    {
+      "id": "central-maine-power",
+      "displayName": "Central Maine Power",
+      "clientNames": [
+        "Central Maine Power"
+      ],
+      "parentCo": "Avangrid",
+      "statesListed": "ME",
+      "eiaIds": [
+        3266
+      ],
+      "eiaNames": [
+        "CENTRAL MAINE POWER CO"
+      ],
+      "website": "https://www.cmpco.com"
+    },
+    {
+      "id": "nyseg",
+      "displayName": "New York State Electric & Gas (NYSEG)",
+      "clientNames": [
+        "New York State Electric & Gas (NYSEG)"
+      ],
+      "parentCo": "Avangrid",
+      "statesListed": "NY",
+      "eiaIds": [
+        13511
+      ],
+      "eiaNames": [
+        "NEW YORK STATE ELEC & GAS CORP"
+      ],
+      "website": "https://www.nyseg.com"
+    },
+    {
+      "id": "rge",
+      "displayName": "Rochester Gas & Electric (RG&E)",
+      "clientNames": [
+        "Rochester Gas & Electric (RG&E)"
+      ],
+      "parentCo": "Avangrid",
+      "statesListed": "NY",
+      "eiaIds": [
+        16183
+      ],
+      "eiaNames": [
+        "ROCHESTER GAS & ELECTRIC CORP"
+      ],
+      "website": "https://www.rge.com"
+    },
+    {
+      "id": "united-illuminating",
+      "displayName": "United Illuminating",
+      "clientNames": [
+        "United Illuminating"
+      ],
+      "parentCo": "Avangrid",
+      "statesListed": "CT",
+      "eiaIds": [
+        19497
+      ],
+      "eiaNames": [
+        "UNITED ILLUMINATING CO"
+      ],
+      "website": "https://www.uinet.com"
+    },
+    {
+      "id": "rhode-island-energy",
+      "displayName": "Rhode Island Energy (RIE)",
+      "clientNames": [
+        "Rhode Island Energy (RIE)"
+      ],
+      "parentCo": "PPL",
+      "statesListed": "RI",
+      "eiaIds": [
+        13214
+      ],
+      "eiaNames": [
+        "THE NARRAGANSETT ELECTRIC CO"
+      ],
+      "note": "Renamed Rhode Island Energy after PPL acquired The Narragansett Electric Co from National Grid in 2022; federal data still carries the legal name.",
+      "website": "https://www.rienergy.com"
+    },
+    {
+      "id": "eversource",
+      "displayName": "Eversource",
+      "clientNames": [
+        "Eversource"
+      ],
+      "parentCo": "",
+      "statesListed": "CT, MA, NH",
+      "eiaIds": [
+        4176,
+        54913,
+        15472
+      ],
+      "eiaNames": [
+        "CONNECTICUT LIGHT & POWER CO",
+        "NSTAR ELECTRIC COMPANY",
+        "PUBLIC SERVICE CO OF NH"
+      ],
+      "note": "Eversource operates as three legal entities: CL&P (CT), NSTAR Electric (MA, includes former WMECO), and PSNH (NH).",
+      "website": "https://www.eversource.com"
+    },
+    {
+      "id": "national-grid",
+      "displayName": "National Grid",
+      "clientNames": [
+        "National Grid"
+      ],
+      "parentCo": "",
+      "statesListed": "NY",
+      "eiaIds": [
+        13573,
+        11804,
+        13206
+      ],
+      "eiaNames": [
+        "NIAGARA MOHAWK POWER CORP.",
+        "MASSACHUSETTS ELECTRIC CO",
+        "NANTUCKET ELECTRIC CO"
+      ],
+      "note": "Client list says NY (Niagara Mohawk, upstate NY). National Grid's US electric footprint also includes Massachusetts Electric and Nantucket Electric (MA), shown for completeness.",
+      "website": "https://www.nationalgridus.com"
+    },
+    {
+      "id": "pseg-long-island",
+      "displayName": "PSEG Long Island",
+      "clientNames": [
+        "PSEG-Long Island"
+      ],
+      "parentCo": "",
+      "statesListed": "NY",
+      "eiaIds": [
+        11171
+      ],
+      "eiaNames": [
+        "LONG ISLAND POWER AUTHORITY"
+      ],
+      "note": "PSEG Long Island operates the grid under contract for the Long Island Power Authority (LIPA), a NY state authority; the federal territory record is filed by LIPA.",
+      "website": "https://www.psegliny.com"
+    },
+    {
+      "id": "pseg",
+      "displayName": "Public Service Electric & Gas (PSE&G)",
+      "clientNames": [
+        "Public Service Electric & Gas (PSE&G)"
+      ],
+      "parentCo": "",
+      "statesListed": "NJ",
+      "eiaIds": [
+        15477
+      ],
+      "eiaNames": [
+        "PUBLIC SERVICE ELEC & GAS CO"
+      ],
+      "website": "https://www.pseg.com"
+    },
+    {
+      "id": "jcpl",
+      "displayName": "Jersey Central Power & Light (JCP&L)",
+      "clientNames": [
+        "Jersey Central Power & Light (JCP&L)"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "NJ",
+      "eiaIds": [
+        9726
+      ],
+      "eiaNames": [
+        "JERSEY CENTRAL POWER & LT CO"
+      ],
+      "website": "https://www.firstenergycorp.com/jersey_central_power_light.html"
+    },
+    {
+      "id": "coned",
+      "displayName": "Consolidated Edison (ConEd)",
+      "clientNames": [
+        "Consolidated Edison (ConEd)"
+      ],
+      "parentCo": "",
+      "statesListed": "NY",
+      "eiaIds": [
+        4226
+      ],
+      "eiaNames": [
+        "CONSOLIDATED EDISON CO-NY INC"
+      ],
+      "website": "https://www.coned.com"
+    },
+    {
+      "id": "orange-rockland",
+      "displayName": "Orange & Rockland Utilities (ORU)",
+      "clientNames": [
+        "Orange & Rockland Utilities (ORU)"
+      ],
+      "parentCo": "ConEd",
+      "statesListed": "NY & NJ",
+      "eiaIds": [
+        14154,
+        16213
+      ],
+      "eiaNames": [
+        "ORANGE & ROCKLAND UTILS INC",
+        "ROCKLAND ELECTRIC CO"
+      ],
+      "note": "Rockland Electric Co is O&R's New Jersey subsidiary; both shown as one footprint.",
+      "website": "https://www.oru.com"
+    },
+    {
+      "id": "central-hudson",
+      "displayName": "Central Hudson Gas & Electric",
+      "clientNames": [
+        "Central Hudson Gas & Electric"
+      ],
+      "parentCo": "",
+      "statesListed": "NY",
+      "eiaIds": [
+        3249
+      ],
+      "eiaNames": [
+        "CENTRAL HUDSON GAS & ELEC CORP"
+      ],
+      "website": "https://www.cenhud.com"
+    },
+    {
+      "id": "peco",
+      "displayName": "PECO",
+      "clientNames": [
+        "PECO"
+      ],
+      "parentCo": "Exelon",
+      "statesListed": "PA",
+      "eiaIds": [
+        14940
+      ],
+      "eiaNames": [
+        "PECO ENERGY CO"
+      ],
+      "website": "https://www.peco.com"
+    },
+    {
+      "id": "atlantic-city-electric",
+      "displayName": "Atlantic City Electric (ACE)",
+      "clientNames": [
+        "Atlantic City Electric (ACE)"
+      ],
+      "parentCo": "Exelon",
+      "statesListed": "NJ",
+      "eiaIds": [
+        963
+      ],
+      "eiaNames": [
+        "ATLANTIC CITY ELECTRIC CO"
+      ],
+      "website": "https://www.atlanticcityelectric.com"
+    },
+    {
+      "id": "delmarva-power",
+      "displayName": "Delmarva Power",
+      "clientNames": [
+        "DelMarva Power"
+      ],
+      "parentCo": "Exelon",
+      "statesListed": "DE and MD",
+      "eiaIds": [
+        5027
+      ],
+      "eiaNames": [
+        "DELMARVA POWER"
+      ],
+      "website": "https://www.delmarva.com"
+    },
+    {
+      "id": "bge",
+      "displayName": "Baltimore Gas & Electric (BGE)",
+      "clientNames": [
+        "Baltimore Gas & Electric (BGE)"
+      ],
+      "parentCo": "Exelon",
+      "statesListed": "MD",
+      "eiaIds": [
+        1167
+      ],
+      "eiaNames": [
+        "BALTIMORE GAS & ELECTRIC CO"
+      ],
+      "website": "https://www.bge.com"
+    },
+    {
+      "id": "pepco",
+      "displayName": "PEPCO",
+      "clientNames": [
+        "PEPCO"
+      ],
+      "parentCo": "Exelon",
+      "statesListed": "DC",
+      "eiaIds": [
+        15270
+      ],
+      "eiaNames": [
+        "POTOMAC ELECTRIC POWER CO"
+      ],
+      "website": "https://www.pepco.com"
+    },
+    {
+      "id": "met-ed",
+      "displayName": "Metropolitan Edison (Met-Ed)",
+      "clientNames": [
+        "Metropolotain Edison (Met-Ed)"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "PA",
+      "eiaIds": [
+        12390
+      ],
+      "eiaNames": [
+        "METROPOLITAN EDISON CO"
+      ],
+      "note": "Client list spelling corrected: 'Metropolotain' -> Metropolitan.",
+      "website": "https://www.firstenergycorp.com/met_ed.html"
+    },
+    {
+      "id": "ppl-electric",
+      "displayName": "PPL Electric Utilities",
+      "clientNames": [
+        "PPL Corporation"
+      ],
+      "parentCo": "PPL",
+      "statesListed": "PA",
+      "eiaIds": [
+        14715
+      ],
+      "eiaNames": [
+        "PPL ELECTRIC UTILITIES CORP"
+      ],
+      "note": "PPL Corporation is the holding company; the PA territory belongs to PPL Electric Utilities Corp.",
+      "website": "https://www.pplelectric.com"
+    },
+    {
+      "id": "west-penn-power",
+      "displayName": "West Penn Power",
+      "clientNames": [
+        "West Penn Power"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "PA",
+      "eiaIds": [
+        20387
+      ],
+      "eiaNames": [
+        "WEST PENN POWER COMPANY"
+      ],
+      "website": "https://www.firstenergycorp.com/west_penn_power.html"
+    },
+    {
+      "id": "penn-power",
+      "displayName": "Penn Power",
+      "clientNames": [
+        "Penn Power"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "PA",
+      "eiaIds": [
+        14716
+      ],
+      "eiaNames": [
+        "PENNSYLVANIA POWER CO"
+      ],
+      "website": "https://www.firstenergycorp.com/penn_power.html"
+    },
+    {
+      "id": "penelec",
+      "displayName": "Penelec",
+      "clientNames": [
+        "Penelec"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "PA",
+      "eiaIds": [
+        14711
+      ],
+      "eiaNames": [
+        "PENNSYLVANIA ELECTRIC CO"
+      ],
+      "website": "https://www.firstenergycorp.com/penelec.html"
+    },
+    {
+      "id": "potomac-edison",
+      "displayName": "Potomac Edison",
+      "clientNames": [
+        "Potomac Edison"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "MD and WV",
+      "eiaIds": [
+        15263
+      ],
+      "eiaNames": [
+        "THE POTOMAC EDISON COMPANY"
+      ],
+      "website": "https://www.firstenergycorp.com/potomac_edison.html"
+    },
+    {
+      "id": "mon-power",
+      "displayName": "Mon Power",
+      "clientNames": [
+        "Mon Power"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "WV",
+      "eiaIds": [
+        12796
+      ],
+      "eiaNames": [
+        "MONONGAHELA POWER CO"
+      ],
+      "website": "https://www.firstenergycorp.com/mon_power.html"
+    },
+    {
+      "id": "dominion-energy-va-nc",
+      "displayName": "Dominion Energy (VA & NC)",
+      "clientNames": [
+        "Dominion Virginia",
+        "Dominion NC"
+      ],
+      "parentCo": "Dominion",
+      "statesListed": "VA, NC",
+      "eiaIds": [
+        19876
+      ],
+      "eiaNames": [
+        "VIRGINIA ELECTRIC & POWER CO"
+      ],
+      "note": "Both 'Dominion Virginia' and 'Dominion NC' rows on the client list are the same legal entity, Virginia Electric & Power Co (Dominion Energy), whose territory spans VA and northeastern NC.",
+      "website": "https://www.dominionenergy.com"
+    },
+    {
+      "id": "duke-energy",
+      "displayName": "Duke Energy",
+      "clientNames": [
+        "Duke Energy"
+      ],
+      "parentCo": "",
+      "statesListed": "NC, IN & FL",
+      "eiaIds": [
+        5416,
+        3046,
+        6455,
+        15470,
+        3542,
+        19446
+      ],
+      "eiaNames": [
+        "DUKE ENERGY CAROLINAS, LLC",
+        "DUKE ENERGY PROGRESS - (NC)",
+        "DUKE ENERGY FLORIDA, LLC",
+        "DUKE ENERGY INDIANA, LLC",
+        "DUKE ENERGY OHIO INC",
+        "DUKE ENERGY KENTUCKY"
+      ],
+      "note": "Duke Energy operates six regulated electric utilities (Carolinas, Progress, Florida, Indiana, Ohio, Kentucky); all are shown as one footprint.",
+      "website": "https://www.duke-energy.com"
+    },
+    {
+      "id": "dominion-energy-sc",
+      "displayName": "Dominion Energy South Carolina (formerly SCE&G)",
+      "clientNames": [
+        "South Carolina Electric & Gas"
+      ],
+      "parentCo": "Dominion",
+      "statesListed": "SC",
+      "eiaIds": [
+        17539
+      ],
+      "eiaNames": [
+        "DOMINION ENERGY SOUTH CAROLINA, INC"
+      ],
+      "note": "SCE&G was renamed Dominion Energy South Carolina after Dominion acquired SCANA in 2019.",
+      "website": "https://www.dominionenergy.com"
+    },
+    {
+      "id": "georgia-power",
+      "displayName": "Georgia Power",
+      "clientNames": [
+        "Georgia Power"
+      ],
+      "parentCo": "Southern Company",
+      "statesListed": "GA",
+      "eiaIds": [
+        7140
+      ],
+      "eiaNames": [
+        "GEORGIA POWER CO"
+      ],
+      "website": "https://www.georgiapower.com"
+    },
+    {
+      "id": "alabama-power",
+      "displayName": "Alabama Power",
+      "clientNames": [
+        "Alabama Power"
+      ],
+      "parentCo": "Southern Company",
+      "statesListed": "AL",
+      "eiaIds": [
+        195
+      ],
+      "eiaNames": [
+        "ALABAMA POWER CO"
+      ],
+      "website": "https://www.alabamapower.com"
+    },
+    {
+      "id": "mississippi-power",
+      "displayName": "Mississippi Power",
+      "clientNames": [
+        "Mississippi Power"
+      ],
+      "parentCo": "Southern Company",
+      "statesListed": "MS",
+      "eiaIds": [
+        12686
+      ],
+      "eiaNames": [
+        "MISSISSIPPI POWER CO"
+      ],
+      "website": "https://www.mississippipower.com"
+    },
+    {
+      "id": "tampa-electric",
+      "displayName": "Tampa Electric",
+      "clientNames": [
+        "Tampa Electric"
+      ],
+      "parentCo": "",
+      "statesListed": "FL",
+      "eiaIds": [
+        18454
+      ],
+      "eiaNames": [
+        "TAMPA ELECTRIC CO"
+      ],
+      "website": "https://www.tampaelectric.com"
+    },
+    {
+      "id": "fpl",
+      "displayName": "Florida Power & Light (FPL)",
+      "clientNames": [
+        "Florida Power & Light (FPL)",
+        "Gulf Power"
+      ],
+      "parentCo": "NextEra Energy",
+      "statesListed": "FL",
+      "eiaIds": [
+        6452
+      ],
+      "eiaNames": [
+        "FLORIDA POWER & LIGHT CO"
+      ],
+      "note": "Gulf Power (client list row) merged into FPL in 2021; its former NW-Florida territory is part of the FPL footprint.",
+      "website": "https://www.fpl.com"
+    },
+    {
+      "id": "entergy-mississippi",
+      "displayName": "Entergy Mississippi",
+      "clientNames": [
+        "Entergy Mississippi"
+      ],
+      "parentCo": "Entergy",
+      "statesListed": "MS",
+      "eiaIds": [
+        12685
+      ],
+      "eiaNames": [
+        "ENTERGY MISSISSIPPI LLC"
+      ],
+      "website": "https://www.entergy-mississippi.com"
+    },
+    {
+      "id": "kentucky-power",
+      "displayName": "Kentucky Power",
+      "clientNames": [
+        "Kentucky Power"
+      ],
+      "parentCo": "AEP",
+      "statesListed": "KY",
+      "eiaIds": [
+        22053
+      ],
+      "eiaNames": [
+        "KENTUCKY POWER CO"
+      ],
+      "note": "Appears twice on the client list; deduplicated.",
+      "website": "https://www.kentuckypower.com"
+    },
+    {
+      "id": "lge",
+      "displayName": "Louisville Gas & Electric",
+      "clientNames": [
+        "Louisville Gas & Electric"
+      ],
+      "parentCo": "PPL",
+      "statesListed": "KY",
+      "eiaIds": [
+        11249
+      ],
+      "eiaNames": [
+        "LOUISVILLE GAS & ELECTRIC CO"
+      ],
+      "note": "Sister company Kentucky Utilities (also PPL) serves most of the rest of KY but is not on the client list.",
+      "website": "https://lge-ku.com"
+    },
+    {
+      "id": "ameren-illinois",
+      "displayName": "Ameren Illinois",
+      "clientNames": [
+        "Ameren Illinois"
+      ],
+      "parentCo": "Ameren",
+      "statesListed": "IL",
+      "eiaIds": [
+        56697
+      ],
+      "eiaNames": [
+        "AMEREN ILLINOIS COMPANY"
+      ],
+      "website": "https://www.ameren.com/illinois"
+    },
+    {
+      "id": "nipsco",
+      "displayName": "NIPSCO",
+      "clientNames": [
+        "NIPSCO"
+      ],
+      "parentCo": "NiSource",
+      "statesListed": "IN",
+      "eiaIds": [
+        13756
+      ],
+      "eiaNames": [
+        "NORTHERN INDIANA PUB SERV CO"
+      ],
+      "note": "Client list shows IL; NIPSCO (Northern Indiana Public Service Co) serves northern Indiana.",
+      "website": "https://www.nipsco.com"
+    },
+    {
+      "id": "comed",
+      "displayName": "Commonwealth Edison (ComEd)",
+      "clientNames": [
+        "Commonwealth Edison (ComEd)"
+      ],
+      "parentCo": "Exelon",
+      "statesListed": "IL",
+      "eiaIds": [
+        4110
+      ],
+      "eiaNames": [
+        "COMMONWEALTH EDISON CO"
+      ],
+      "website": "https://www.comed.com"
+    },
+    {
+      "id": "duquesne-light",
+      "displayName": "Duquesne Light Company",
+      "clientNames": [
+        "Duquesene Light Company"
+      ],
+      "parentCo": "",
+      "statesListed": "PA",
+      "eiaIds": [
+        5487
+      ],
+      "eiaNames": [
+        "DUQUESNE LIGHT CO"
+      ],
+      "note": "Client list spelling corrected: 'Duquesene' -> Duquesne.",
+      "website": "https://www.duquesnelight.com"
+    },
+    {
+      "id": "aep-ohio",
+      "displayName": "AEP Ohio",
+      "clientNames": [
+        "AEP Ohio"
+      ],
+      "parentCo": "AEP",
+      "statesListed": "OH",
+      "eiaIds": [
+        14006
+      ],
+      "eiaNames": [
+        "OHIO POWER CO"
+      ],
+      "note": "AEP Ohio's legal entity is Ohio Power Co.",
+      "website": "https://www.aepohio.com"
+    },
+    {
+      "id": "dpl",
+      "displayName": "Dayton Power & Light (AES Ohio)",
+      "clientNames": [
+        "Dayton Power & Light (DP&L)"
+      ],
+      "parentCo": "AES",
+      "statesListed": "OH",
+      "eiaIds": [
+        4922
+      ],
+      "eiaNames": [
+        "DAYTON POWER & LIGHT CO"
+      ],
+      "note": "Rebranded AES Ohio in 2021; federal data carries the legal name Dayton Power & Light Co.",
+      "website": "https://www.aes-ohio.com"
+    },
+    {
+      "id": "ohio-edison",
+      "displayName": "Ohio Edison",
+      "clientNames": [
+        "Ohio Edison"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "OH",
+      "eiaIds": [
+        13998
+      ],
+      "eiaNames": [
+        "OHIO EDISON CO"
+      ],
+      "website": "https://www.firstenergycorp.com/ohio_edison.html"
+    },
+    {
+      "id": "toledo-edison",
+      "displayName": "Toledo Edison",
+      "clientNames": [
+        "Toledo Edison"
+      ],
+      "parentCo": "FirstEnergy",
+      "statesListed": "OH",
+      "eiaIds": [
+        18997
+      ],
+      "eiaNames": [
+        "THE TOLEDO EDISON CO"
+      ],
+      "website": "https://www.firstenergycorp.com/toledo_edison.html"
+    },
+    {
+      "id": "dte-energy",
+      "displayName": "DTE Energy",
+      "clientNames": [
+        "DTE Energy"
+      ],
+      "parentCo": "",
+      "statesListed": "MI",
+      "eiaIds": [
+        5109
+      ],
+      "eiaNames": [
+        "DTE ELECTRIC COMPANY"
+      ],
+      "website": "https://www.dteenergy.com"
+    },
+    {
+      "id": "consumers-energy",
+      "displayName": "Consumers Energy",
+      "clientNames": [
+        "Consumers Energy"
+      ],
+      "parentCo": "CMS Energy",
+      "statesListed": "MI",
+      "eiaIds": [
+        4254
+      ],
+      "eiaNames": [
+        "CONSUMERS ENERGY CO"
+      ],
+      "website": "https://www.consumersenergy.com"
+    }
+  ]
+}

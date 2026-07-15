@@ -28,3 +28,8 @@ export function getNextColor(usedColors: string[]): string {
   const index = usedColors.length % TERRITORY_COLORS.length;
   return TERRITORY_COLORS[index];
 }
+
+/** Stable palette color for a utility by its index in the dataset. */
+export function getUtilityColor(index: number): string {
+  return TERRITORY_COLORS[index % TERRITORY_COLORS.length];
+}

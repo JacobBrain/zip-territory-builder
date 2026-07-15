@@ -10,27 +10,10 @@ import {
   isFeatureInViewport,
   type ZipFeature,
 } from '@/lib/zipBoundaries';
+import { createColoredIcon } from './icons';
 import 'leaflet/dist/leaflet.css';
 
 const MIN_ZOOM = 7; // Show boundaries starting at this zoom level
-
-// ============ Custom Location Pin Icons ============
-function createColoredIcon(color: string, isActive: boolean) {
-  const size = isActive ? 16 : 12;
-  const border = isActive ? 3 : 2;
-  return L.divIcon({
-    className: 'custom-pin',
-    html: `<div style="
-      width: ${size}px; height: ${size}px;
-      background: ${color}; border: ${border}px solid white;
-      border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-      position: relative; z-index: ${isActive ? 1000 : 500};
-    "></div>`,
-    iconSize: [size + border * 2, size + border * 2],
-    iconAnchor: [(size + border * 2) / 2, (size + border * 2) / 2],
-    popupAnchor: [0, -(size / 2 + border)],
-  });
-}
 
 // ============ Zip Polygon Layer (imperative Leaflet, no React state for polygons) ============
 function ZipBoundaryLayer() {

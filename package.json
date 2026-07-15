@@ -1,16 +1,17 @@
 {
   "name": "zip-territory-builder",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/download-geojson.mjs && node scripts/download-zip-cities.mjs",
+    "prebuild": "node scripts/download-geojson.mjs && node scripts/download-zip-cities.mjs && node scripts/download-utility-territories.mjs && node scripts/download-field-locations.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run"
   },
   "dependencies": {
+    "@turf/turf": "^7.3.5",
     "leaflet": "^1.9.4",
     "next": "16.1.6",
     "papaparse": "^5.5.3",

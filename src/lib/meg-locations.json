@@ -1,0 +1,262 @@
+[
+  {
+    "id": "albany-ny",
+    "name": "Albany, NY",
+    "address": "40 Hamilton Lane, Glenmont, NY 12077",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 42.62241,
+    "lng": -73.78637,
+    "tsdf": false
+  },
+  {
+    "id": "atlanta-ga",
+    "name": "Atlanta, GA",
+    "address": "7108 Keegan Court, Covington, GA 30014",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 33.61571,
+    "lng": -83.86133,
+    "tsdf": false
+  },
+  {
+    "id": "baltimore-md",
+    "name": "Baltimore, MD",
+    "address": "4420 East Eager Street, Baltimore, MD 21205",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 39.3033,
+    "lng": -76.55966,
+    "tsdf": true
+  },
+  {
+    "id": "bohemia-ny",
+    "name": "Bohemia, NY",
+    "address": "1599 Ocean Avenue, Bohemia, NY 11716",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 40.78381,
+    "lng": -73.12074,
+    "tsdf": true
+  },
+  {
+    "id": "buffalo-ny",
+    "name": "Buffalo, NY",
+    "address": "4429 Walden Avenue, Lancaster, NY 14086",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 42.92673,
+    "lng": -78.60323,
+    "tsdf": true
+  },
+  {
+    "id": "calverton-ny",
+    "name": "Calverton, NY (Long Island)",
+    "address": "538 Edwards Avenue, Calverton, NY 11933",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 40.92388,
+    "lng": -72.7471,
+    "tsdf": false
+  },
+  {
+    "id": "charlotte-nc",
+    "name": "Charlotte, NC (Haz-Mat)",
+    "address": "6215 Orr Road, Charlotte, NC 28213",
+    "kind": "affiliate",
+    "precision": "address",
+    "lat": 35.26633,
+    "lng": -80.76975,
+    "tsdf": false
+  },
+  {
+    "id": "chester-sc",
+    "name": "Chester, SC (CANCO)",
+    "address": "1248 Armory Road, Chester, SC 29706",
+    "kind": "affiliate",
+    "precision": "address",
+    "lat": 34.73393,
+    "lng": -81.21465,
+    "tsdf": false
+  },
+  {
+    "id": "columbus-oh",
+    "name": "Columbus, OH (Central Ohio Oil)",
+    "address": "795 Marion Road, Columbus, OH 43207",
+    "kind": "affiliate",
+    "precision": "address",
+    "lat": 39.92316,
+    "lng": -82.97586,
+    "tsdf": false
+  },
+  {
+    "id": "dover-de",
+    "name": "Dover, DE",
+    "address": "544 Webbs Lane, Dover, DE 19904",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 39.13224,
+    "lng": -75.54518,
+    "tsdf": false
+  },
+  {
+    "id": "harrisburg-pa",
+    "name": "Harrisburg, PA",
+    "address": "1539 Bobali Drive, Harrisburg, PA 17104",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 40.24937,
+    "lng": -76.84826,
+    "tsdf": false
+  },
+  {
+    "id": "hudson-valley-ny",
+    "name": "Hudson Valley, NY",
+    "address": "169 Stone Castle Road, Rock Tavern, NY 12575",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 41.54651,
+    "lng": -74.13337,
+    "tsdf": false
+  },
+  {
+    "id": "mannington-nj",
+    "name": "Mannington, NJ",
+    "address": "Mannington Township, NJ 08079",
+    "kind": "facility",
+    "precision": "city",
+    "lat": 39.61794,
+    "lng": -75.39813,
+    "tsdf": false
+  },
+  {
+    "id": "north-jersey",
+    "name": "North Jersey",
+    "address": "800 Paul Amico Way, Secaucus, NJ 07094",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 40.76208,
+    "lng": -74.08223,
+    "tsdf": false
+  },
+  {
+    "id": "nyc-metro",
+    "name": "NYC Metro",
+    "address": "1300 Shames Drive, Westbury, NY 11590",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 40.77344,
+    "lng": -73.55679,
+    "tsdf": false
+  },
+  {
+    "id": "ohio-valley-oh",
+    "name": "Ohio Valley, OH",
+    "address": "55680 Industrial Drive, Bridgeport, OH 43912",
+    "kind": "operation",
+    "precision": "city",
+    "lat": 40.07719,
+    "lng": -80.76865,
+    "tsdf": false
+  },
+  {
+    "id": "philadelphia-metro",
+    "name": "Philadelphia Metro",
+    "address": "105 Riverview Avenue, Paulsboro, NJ 08066",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 39.84972,
+    "lng": -75.24133,
+    "tsdf": false
+  },
+  {
+    "id": "raleigh-nc",
+    "name": "Raleigh, NC",
+    "address": "8205 Old McCullers Rd, Raleigh, NC 27603",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 35.6545,
+    "lng": -78.69831,
+    "tsdf": false
+  },
+  {
+    "id": "stamford-ct",
+    "name": "Stamford, CT",
+    "address": "Stamford, CT 06902",
+    "kind": "operation",
+    "precision": "city",
+    "lat": 41.05343,
+    "lng": -73.53873,
+    "tsdf": false
+  },
+  {
+    "id": "syracuse-ny",
+    "name": "Syracuse, NY",
+    "address": "532 State Fair Boulevard, Syracuse, NY 13204",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 43.05989,
+    "lng": -76.18374,
+    "tsdf": true
+  },
+  {
+    "id": "tampa-fl",
+    "name": "Tampa, FL",
+    "address": "905 S Woodrow Wilson St, Plant City, FL 33563",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 28.00931,
+    "lng": -82.14618,
+    "tsdf": true
+  },
+  {
+    "id": "washington-dc-metro",
+    "name": "Washington DC Metro",
+    "address": "Washington, DC",
+    "kind": "operation",
+    "precision": "city",
+    "lat": 38.8951,
+    "lng": -77.03638,
+    "tsdf": false
+  },
+  {
+    "id": "newburgh-ny-waterworks",
+    "name": "Waterworks - Newburgh, NY",
+    "address": "77 Stewart Avenue, Newburgh, NY 12550",
+    "kind": "facility",
+    "precision": "address",
+    "lat": 41.50966,
+    "lng": -74.06321,
+    "tsdf": true
+  },
+  {
+    "id": "williamsport-pa",
+    "name": "Williamsport, PA",
+    "address": "2902 Reach Road, Williamsport, PA 17701",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 41.22631,
+    "lng": -77.07047,
+    "tsdf": false
+  },
+  {
+    "id": "woodstown-nj",
+    "name": "Woodstown, NJ",
+    "address": "108 East Lake Road, Woodstown, NJ 08098",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 39.63693,
+    "lng": -75.31796,
+    "tsdf": true
+  },
+  {
+    "id": "youngstown-oh",
+    "name": "Youngstown, OH",
+    "address": "3100 Benjamin Franklin Hwy, Edinburg, PA 16116",
+    "kind": "operation",
+    "precision": "address",
+    "lat": 41.0567,
+    "lng": -80.44614,
+    "tsdf": false
+  }
+]
