@@ -72,6 +72,11 @@ export interface ExportData {
 
 export type ZipToCityLookup = Record<string, { city: string; lat: number; lng: number }>;
 
+// A US municipality (incorporated place or CDP) with its internal point.
+// Tuple form keeps public/data/us-places.json compact: [name, "ST", lat, lng].
+export type USPlace = [name: string, state: string, lat: number, lng: number];
+export type USPlaces = USPlace[];
+
 export type LocationIdMapping = Record<string, number>; // locationName -> numeric export ID
 
 export interface CSVRow {

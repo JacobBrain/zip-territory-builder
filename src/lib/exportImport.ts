@@ -1,5 +1,5 @@
 import type { Polygon, MultiPolygon } from 'geojson';
-import type { TerritoryState, ExportData, Location, ZipToCityLookup, LocationIdMapping } from '@/types';
+import type { TerritoryState, ExportData, Location, ZipToCityLookup, LocationIdMapping, USPlaces } from '@/types';
 import { loadStateGeoJSON, STATE_BOUNDS } from './zipBoundaries';
 import type { ZipFeature } from './zipBoundaries';
 import locationIdMapping from './location-ids.json';
@@ -132,6 +132,19 @@ export async function loadZipToCityLookup(): Promise<ZipToCityLookup> {
   return response.json();
 }
 
+// US municipalities used to enrich by_city with names USPS folds into a larger
+// preferred city (Doraville -> "Atlanta"). Optional: returns [] when the file
+// is absent so an older build still exports (without the extra city names).
+export async function loadUSPlaces(): Promise<USPlaces> {
+  try {
+    const response = await fetch('/data/us-places.json');
+    if (!response.ok) return [];
+    return await response.json();
+  } catch {
+    return [];
+  }
+}
+
 // Full US state name → USPS abbreviation. Used so "Tampa, Florida" matches "Tampa, FL".
 const US_STATE_ABBREV: Record<string, string> = {
   alabama: 'al', alaska: 'ak', arizona: 'az', arkansas: 'ar', california: 'ca',
@@ -159,6 +172,14 @@ function normalizeLocationName(name: string): string {
   return `${city}, ${abbrev}`;
 }
 
+// Manual owner for cities whose ZIPs split evenly across two territories, where a
+// majority-ZIP tiebreak can't decide. Keyed "city_key|state" → WordPress location
+// ID. Also usable to override the automatic dominant-branch pick if MEG disagrees.
+const CITY_TIEBREAK: Record<string, number> = {
+  'somerset|pa': 2322,       // Ohio Valley, OH — Somerset is SW PA, ~40mi from Pittsburgh
+  'bowling_green|oh': 3647,  // Columbus — NW Ohio, closer to Columbus than Youngstown
+};
+
 export interface CityLookupExport {
   json: string;
   unmappedNames: string[];
@@ -166,7 +187,8 @@ export interface CityLookupExport {
 
 export async function exportToCityLookup(
   state: TerritoryState,
-  zipToCityLookup: ZipToCityLookup
+  zipToCityLookup: ZipToCityLookup,
+  usPlaces: USPlaces = []
 ): Promise<CityLookupExport> {
   // Build normalized-name → numeric ID lookup so minor naming drift (trailing *,
   // "Florida" vs "FL", casing, whitespace) doesn't cause a territory to be dropped.
@@ -206,8 +228,11 @@ export async function exportToCityLookup(
     }
   }
 
-  // Build by_city: lowercase_city → lowercase_state → array of export IDs
+  // Build by_city: lowercase_city → lowercase_state → array of export IDs.
+  // Also tally how many ZIPs of each city/state fall in each territory, so a city
+  // whose ZIPs straddle two territories can be collapsed to its dominant one below.
   const byCity: Record<string, Record<string, Array<number | string>>> = {};
+  const cityZipCounts = new Map<string, Map<string, number>>(); // "city|state" → (exportId JSON → zip count)
   for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
     const exportId = idMap.get(locationId);
     if (exportId == null) continue;
@@ -231,6 +256,12 @@ export async function exportToCityLookup(
     if (!byCity[cityKey][stateKey].includes(exportId)) {
       byCity[cityKey][stateKey].push(exportId);
     }
+
+    const countKey = `${cityKey}|${stateKey}`;
+    let counts = cityZipCounts.get(countKey);
+    if (!counts) { counts = new Map(); cityZipCounts.set(countKey, counts); }
+    const idJson = JSON.stringify(exportId);
+    counts.set(idJson, (counts.get(idJson) ?? 0) + 1);
   }
 
   // Backfill by_zip: ZIPs without Census boundaries (PO Box / unique ZIPs) won't
@@ -269,6 +300,89 @@ export async function exportToCityLookup(
         byZip[zipCode] = [...exportIds];
         break;
       }
+    }
+  }
+
+  // Enrich by_city with municipalities USPS folds into a larger "preferred" city.
+  // The ZIP-derived pass above keys by_city on each ZIP's single USPS city name
+  // (e.g. 30340/30362 -> "Atlanta"), so sub-municipalities like Doraville,
+  // Chamblee and Dunwoody never get a key and a city search falls through to the
+  // National Solutions catch-all. Here we place each real municipality inside its
+  // containing assigned ZIP and map its name to that ZIP's territory.
+  //
+  // Conservative on purpose: we never modify a city/state entry the ZIP pass
+  // already produced, and we only add a NEW one when every place of that name in
+  // the state resolves to a single territory. Same-named places that span
+  // multiple territories (there are several "Centerville"s in PA) stay out rather
+  // than becoming ambiguous multi-territory entries that also hit the fallback.
+  if (usPlaces.length > 0) {
+    const cityKeyFromName = (name: string) =>
+      name.trim().toLowerCase().replace(/\./g, '').replace(/\s+/g, '_');
+
+    // candidate (cityKey|state) → set of territory export IDs (JSON-encoded for
+    // number|string equality)
+    const candidates = new Map<string, Set<string>>();
+    for (const [name, stateAbbr, lat, lng] of usPlaces) {
+      if (!lat && !lng) continue;
+      const cityKey = cityKeyFromName(name);
+      const stateKey = stateAbbr.toLowerCase();
+      if (!cityKey) continue;
+      if (byCity[cityKey]?.[stateKey]) continue; // never touch the ZIP-derived entry
+
+      let containing: Array<number | string> | null = null;
+      for (const { feature, exportIds } of assignedFeatures) {
+        const b = feature.bounds;
+        if (lat < b.south || lat > b.north || lng < b.west || lng > b.east) continue;
+        if (pointInGeometry(lng, lat, feature.geometry)) {
+          containing = exportIds;
+          break;
+        }
+      }
+      if (!containing) continue;
+
+      const mapKey = `${cityKey}|${stateKey}`;
+      let set = candidates.get(mapKey);
+      if (!set) { set = new Set(); candidates.set(mapKey, set); }
+      for (const id of containing) set.add(JSON.stringify(id));
+    }
+
+    for (const [mapKey, idSet] of candidates) {
+      if (idSet.size !== 1) continue; // ambiguous → leave out
+      const [cityKey, stateKey] = mapKey.split('|');
+      const id = JSON.parse([...idSet][0]) as number | string;
+      if (!byCity[cityKey]) byCity[cityKey] = {};
+      byCity[cityKey][stateKey] = [id];
+    }
+  }
+
+  // Collapse straddle cities to a single territory. A city whose ZIPs span two
+  // territories (e.g. Pittsburgh across Ohio Valley + Youngstown) otherwise leaves
+  // a multi-ID by_city entry, and a city-only search can't pick one → the site
+  // falls back to National Solutions. Resolve each to the territory holding the
+  // most of that city's ZIPs; on an even split use CITY_TIEBREAK, else the lowest
+  // ID (deterministic). ZIP lookups keep full precision via by_zip.
+  for (const [cityKey, states] of Object.entries(byCity)) {
+    for (const [stateKey, ids] of Object.entries(states)) {
+      if (ids.length <= 1) continue;
+      const counts = cityZipCounts.get(`${cityKey}|${stateKey}`);
+      let max = -1;
+      let tied: Array<number | string> = [];
+      for (const id of ids) {
+        const c = counts?.get(JSON.stringify(id)) ?? 0;
+        if (c > max) { max = c; tied = [id]; }
+        else if (c === max) { tied.push(id); }
+      }
+      let winner: number | string;
+      const override = CITY_TIEBREAK[`${cityKey}|${stateKey}`];
+      if (tied.length > 1 && override != null && ids.includes(override)) {
+        winner = override;
+      } else {
+        // stable pick among the top-count ids: lowest numeric id, else first
+        winner = [...tied].sort((a, b) =>
+          typeof a === 'number' && typeof b === 'number' ? a - b : String(a).localeCompare(String(b))
+        )[0];
+      }
+      states[stateKey] = [winner];
     }
   }
 

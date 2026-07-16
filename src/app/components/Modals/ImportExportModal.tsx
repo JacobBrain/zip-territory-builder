@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useTerritory } from '@/lib/territoryState';
-import { exportToJSON, exportToCSV, exportToCityLookup, loadZipToCityLookup, importFromJSON, downloadFile, getExportFilename } from '@/lib/exportImport';
+import { exportToJSON, exportToCSV, exportToCityLookup, loadZipToCityLookup, loadUSPlaces, importFromJSON, downloadFile, getExportFilename } from '@/lib/exportImport';
 import { useToast } from '@/app/components/UI/Toast';
 
 interface ImportModalProps {
@@ -103,8 +103,11 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
   const handleExportCityLookup = async () => {
     setIsLoadingCityLookup(true);
     try {
-      const zipToCityLookup = await loadZipToCityLookup();
-      const { json, unmappedNames } = await exportToCityLookup(state, zipToCityLookup);
+      const [zipToCityLookup, usPlaces] = await Promise.all([
+        loadZipToCityLookup(),
+        loadUSPlaces(),
+      ]);
+      const { json, unmappedNames } = await exportToCityLookup(state, zipToCityLookup, usPlaces);
       const now = new Date();
       const date = now.toISOString().slice(0, 10);
       const time = now.toTimeString().slice(0, 8).replace(/:/g, '');
