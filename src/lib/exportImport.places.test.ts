@@ -127,6 +127,26 @@ describe('straddle-city collapse to a single territory', () => {
     expect(r.by_city['straddle'].ga).toEqual(r.by_zip['30340']); // majority = territory a
   });
 
+  it('counts ZIPs AFTER backfill, so a backfilled majority wins', async () => {
+    // Pre-backfill: territory a=1 (30340), b=1 (30500) → a tie. A PO-box ZIP with
+    // no polygon (30999) sits inside territory a's polygon and backfills to a,
+    // making the true majority a=2. The collapse must follow the post-backfill count.
+    const state = baseState(
+      [loc('a', 'Atlanta, GA', ['30340']), loc('b', 'Columbus', ['30500'])],
+      { '30340': 'a', '30500': 'b' },
+    );
+    const zipToCity: ZipToCityLookup = {
+      '30340': { city: 'Flip, GA', lat: 33.90, lng: -84.27 }, // in BOX1 (territory a)
+      '30500': { city: 'Flip, GA', lat: 32.05, lng: -82.95 }, // in BOX2 (territory b)
+      '30999': { city: 'Flip, GA', lat: 33.88, lng: -84.30 }, // PO box, no polygon, inside BOX1
+    };
+    const { json } = await exportToCityLookup(state, zipToCity);
+    const r = JSON.parse(json);
+    expect(r.by_zip['30999']).toBeDefined();            // backfilled
+    expect(r.by_city['flip'].ga).toHaveLength(1);
+    expect(r.by_city['flip'].ga).toEqual(r.by_zip['30340']); // majority a after backfill
+  });
+
   it('uses CITY_TIEBREAK on an even split (somerset,pa → Ohio Valley 2322)', async () => {
     // 1 ZIP each → 1/1 tie; override must decide.
     const state = baseState(

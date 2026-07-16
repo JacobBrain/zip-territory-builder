@@ -228,24 +228,26 @@ export async function exportToCityLookup(
     }
   }
 
-  // Build by_city: lowercase_city → lowercase_state → array of export IDs.
-  // Also tally how many ZIPs of each city/state fall in each territory, so a city
-  // whose ZIPs straddle two territories can be collapsed to its dominant one below.
-  const byCity: Record<string, Record<string, Array<number | string>>> = {};
-  const cityZipCounts = new Map<string, Map<string, number>>(); // "city|state" → (exportId JSON → zip count)
-  for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
-    const exportId = idMap.get(locationId);
-    if (exportId == null) continue;
+  // Derive the "City, ST" for a ZIP into normalized (cityKey, stateKey), matching
+  // the by_city key style. Returns null when the ZIP has no city entry.
+  const cityStateKeyForZip = (zipCode: string): [string, string] | null => {
     const entry = zipToCityLookup[zipCode];
-    if (!entry) continue;
+    if (!entry) return null;
     const cityState = entry.city;
-
     const lastComma = cityState.lastIndexOf(', ');
     const cityRaw = lastComma !== -1 ? cityState.slice(0, lastComma) : cityState;
     const stateRaw = lastComma !== -1 ? cityState.slice(lastComma + 2) : '';
+    return [cityRaw.toLowerCase().replace(/\s+/g, '_'), stateRaw.toLowerCase()];
+  };
 
-    const cityKey = cityRaw.toLowerCase().replace(/\s+/g, '_');
-    const stateKey = stateRaw.toLowerCase();
+  // Build by_city: lowercase_city → lowercase_state → array of export IDs.
+  const byCity: Record<string, Record<string, Array<number | string>>> = {};
+  for (const [zipCode, locationId] of Object.entries(state.zipAssignments)) {
+    const exportId = idMap.get(locationId);
+    if (exportId == null) continue;
+    const ck = cityStateKeyForZip(zipCode);
+    if (!ck) continue;
+    const [cityKey, stateKey] = ck;
 
     if (!byCity[cityKey]) {
       byCity[cityKey] = {};
@@ -256,12 +258,6 @@ export async function exportToCityLookup(
     if (!byCity[cityKey][stateKey].includes(exportId)) {
       byCity[cityKey][stateKey].push(exportId);
     }
-
-    const countKey = `${cityKey}|${stateKey}`;
-    let counts = cityZipCounts.get(countKey);
-    if (!counts) { counts = new Map(); cityZipCounts.set(countKey, counts); }
-    const idJson = JSON.stringify(exportId);
-    counts.set(idJson, (counts.get(idJson) ?? 0) + 1);
   }
 
   // Backfill by_zip: ZIPs without Census boundaries (PO Box / unique ZIPs) won't
@@ -352,6 +348,22 @@ export async function exportToCityLookup(
       const id = JSON.parse([...idSet][0]) as number | string;
       if (!byCity[cityKey]) byCity[cityKey] = {};
       byCity[cityKey][stateKey] = [id];
+    }
+  }
+
+  // Tally how many ZIPs of each city/state fall in each territory, using the FINAL
+  // by_zip (after backfill) so the dominant-branch pick reflects every ZIP the site
+  // will resolve, not just the pre-backfill assignments.
+  const cityZipCounts = new Map<string, Map<string, number>>(); // "city|state" → (exportId JSON → count)
+  for (const [zipCode, ids] of Object.entries(byZip)) {
+    const ck = cityStateKeyForZip(zipCode);
+    if (!ck) continue;
+    const countKey = `${ck[0]}|${ck[1]}`;
+    let counts = cityZipCounts.get(countKey);
+    if (!counts) { counts = new Map(); cityZipCounts.set(countKey, counts); }
+    for (const id of ids) {
+      const idJson = JSON.stringify(id);
+      counts.set(idJson, (counts.get(idJson) ?? 0) + 1);
     }
   }
 
