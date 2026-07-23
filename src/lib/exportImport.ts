@@ -177,7 +177,7 @@ function normalizeLocationName(name: string): string {
 // ID. Also usable to override the automatic dominant-branch pick if MEG disagrees.
 const CITY_TIEBREAK: Record<string, number> = {
   'somerset|pa': 2322,       // Ohio Valley, OH — Somerset is SW PA, ~40mi from Pittsburgh
-  'bowling_green|oh': 3647,  // Columbus — NW Ohio, closer to Columbus than Youngstown
+  'bowling_green|oh': 3934,  // Columbus — NW Ohio, closer to Columbus than Youngstown
 };
 
 export interface CityLookupExport {
