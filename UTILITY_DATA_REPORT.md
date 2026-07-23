@@ -42,7 +42,8 @@ utilities, mapped to the entries below. Corrections and interpretations are note
 | Alabama Power | Alabama Power | ALABAMA POWER CO (195) | AL | 1,526,836 | 0% |  |
 | Mississippi Power | Mississippi Power | MISSISSIPPI POWER CO (12686) | MS | 191,431 | 0% |  |
 | Tampa Electric | Tampa Electric | TAMPA ELECTRIC CO (18454) | FL | 819,767 | 100% |  |
-| Florida Power & Light (FPL) | Florida Power & Light (FPL); Gulf Power | FLORIDA POWER & LIGHT CO (6452) | FL | 5,739,183 | 3% | Gulf Power (client list row) merged into FPL in 2021; its former NW-Florida territory is part of the FPL footprint. |
+| Florida Power & Light (FPL) | Florida Power & Light (FPL) | FLORIDA POWER & LIGHT CO (6452) | FL | 5,739,183 | 3% | Gulf Power merged into FPL in 2021 but its former NW-Florida (Panhandle) territory is outside FPL's federal service-territory boundary, so it is mapped separately as "Gulf Power" (see Manual additions). |
+| Gulf Power | Gulf Power | FLORIDA POWER & LIGHT CO, formerly Gulf Power Co (6452) | FL | 460,000 | 0% | Manual addition — no separate federal territory since the 2021 FPL merger; authored from the eight NW-Florida counties Gulf Power served (Escambia, Santa Rosa, Okaloosa, Walton, Holmes, Washington, Bay, Jackson), approximated from US Census county boundaries. |
 | Entergy Mississippi | Entergy Mississippi | ENTERGY MISSISSIPPI LLC (12685) | MS | 459,673 | 0% |  |
 | Kentucky Power | Kentucky Power | KENTUCKY POWER CO (22053) | OH | 164,184 | 0% | Appears twice on the client list; deduplicated. |
 | Louisville Gas & Electric | Louisville Gas & Electric | LOUISVILLE GAS & ELECTRIC CO (11249) | KY | 430,394 | 0% | Sister company Kentucky Utilities (also PPL) serves most of the rest of KY but is not on the client list. |
@@ -60,6 +61,10 @@ utilities, mapped to the entries below. Corrections and interpretations are note
 ## Issues
 
 None - every client-list utility matched federal territory data.
+
+## Manual additions
+
+- **Gulf Power** (added 2026-07-23, `scripts/add-gulf-power.mjs`). Gulf Power Company merged into Florida Power & Light (FPL, EIA 6452) in 2021 and no longer files Form EIA-861 separately, so the HIFLD/EIA dataset has no standalone Gulf Power polygon and FPL's 2018 boundary does not reach the Panhandle — leaving the client's "Gulf Power" search with no result. Its territory is authored from the eight Northwest-Florida counties Gulf Power served (Escambia, Santa Rosa, Okaloosa, Walton, Holmes, Washington, Bay, Jackson), dissolved from US Census TIGER county boundaries — a documented approximation appropriate to this regional-overview map, not operational dispatch. Substations are territory-matched (HIFLD, same method as the generated utilities); power plants are the FPL-owned (EIA 6452) plants located within the Panhandle — the former Gulf Power fleet. This entry is hand-maintained and is NOT reproduced by `download-utility-territories.mjs --force`.
 
 ## Field Locations
 
@@ -109,6 +114,7 @@ utility's federal EIA ID - these are true ownership matches.
 | Mississippi Power | 527 | 0% | 6 | 0% |
 | Tampa Electric | 264 | 100% | 30 | 100% |
 | Florida Power & Light (FPL) | 923 | 4% | 128 | 6% |
+| Gulf Power | 230 | 0% | 21 | 0% |
 | Entergy Mississippi | 436 | 0% | 4 | 0% |
 | Kentucky Power | 141 | 0% | 2 | 50% |
 | Louisville Gas & Electric | 123 | 0% | 5 | 0% |
