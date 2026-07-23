@@ -1,0 +1,24 @@
+{
+  "id": "gulf-power",
+  "name": "Gulf Power",
+  "clientNames": ["Gulf Power"],
+  "parentCo": "NextEra Energy",
+  "statesListed": "FL",
+  "states": ["FL"],
+  "customers": 460000,
+  "website": "https://www.fpl.com",
+  "note": "Gulf Power Company (EIA utility ID 7801) merged into Florida Power & Light (FPL, EIA 6452) in 2021; its own EIA-861 filing was retired, so no separate federal service-territory boundary exists and it was missing from the map. Shown here as its historical Northwest-Florida service area — the eight counties Gulf Power served (Escambia, Santa Rosa, Okaloosa, Walton, Holmes, Washington, Bay, Jackson) — approximated from US Census county boundaries. This county envelope slightly overstates the footprint (~8,600 vs Gulf Power's ~7,550 sq mi filed area) because rural pockets inside those counties are served by cooperatives, not Gulf Power. Customer count is Gulf Power's pre-merger figure (~460,000).",
+  "entity": { "eiaId": "7801", "name": "GULF POWER CO", "holdingCo": "NEXTERA ENERGY INC" },
+  "hqAddress": "One Energy Place, Pensacola, FL 32520",
+  "territory": {
+    "stateFips": "12",
+    "stateAbbr": "FL",
+    "counties": ["Escambia", "Santa Rosa", "Okaloosa", "Walton", "Holmes", "Washington", "Bay", "Jackson"]
+  },
+  "plantsOwnerEiaId": 6452,
+  "stripClientNameFrom": {
+    "utilityId": "fpl",
+    "clientName": "Gulf Power",
+    "newNote": "Client list combined \"Florida Power & Light (FPL)\" and \"Gulf Power\"; Gulf Power merged into FPL in 2021 but its former Northwest-Florida (Panhandle) territory is outside FPL's federal service-territory boundary, so it is mapped separately as \"Gulf Power\"."
+  }
+}

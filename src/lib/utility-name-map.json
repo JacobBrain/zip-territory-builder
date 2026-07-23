@@ -558,7 +558,7 @@
       "eiaNames": [
         "FLORIDA POWER & LIGHT CO"
       ],
-      "note": "Client list combined \"Florida Power & Light (FPL)\" and \"Gulf Power\"; Gulf Power merged into FPL in 2021 but its former Northwest-Florida (Panhandle) territory is outside FPL’s federal service-territory boundary, so it is mapped separately as \"Gulf Power\".",
+      "note": "Client list combined \"Florida Power & Light (FPL)\" and \"Gulf Power\"; Gulf Power merged into FPL in 2021 but its former Northwest-Florida (Panhandle) territory is outside FPL's federal service-territory boundary, so it is mapped separately as \"Gulf Power\".",
       "website": "https://www.fpl.com"
     },
     {
@@ -571,7 +571,7 @@
       "statesListed": "FL",
       "eiaIds": [],
       "eiaNames": [],
-      "note": "Gulf Power (EIA utility 7801) merged into FPL (EIA 6452) in 2021; its own EIA-861 record was retired and has no polygon in the retail-territories dataset, so eiaIds is intentionally empty. Territory authored from the eight NW-Florida counties (see scripts/add-gulf-power.mjs). A --force rebuild SKIPS this entry — re-run scripts/add-gulf-power.mjs afterward to restore it.",
+      "note": "Manually authored (no federal polygon). Config: scripts/utilities/gulf-power.json. eiaIds intentionally empty — a --force rebuild SKIPS this entry; re-run scripts/add-manual-utility.mjs afterward.",
       "website": "https://www.fpl.com"
     },
     {
