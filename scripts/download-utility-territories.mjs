@@ -200,6 +200,14 @@ const reportRows = [];
 const failures = [];
 
 for (const entry of nameMap.utilities) {
+  // Manually-authored entries (e.g. gulf-power) have no fetchable federal
+  // polygon and carry empty eiaIds. Skip them here rather than treating the
+  // missing geometry as fatal; re-run scripts/add-gulf-power.mjs after a
+  // --force rebuild to restore them.
+  if (!entry.eiaIds || entry.eiaIds.length === 0) {
+    console.warn(`${entry.displayName}: no eiaIds (manually-authored) — skipping; re-run scripts/add-gulf-power.mjs after this rebuild.`);
+    continue;
+  }
   console.log(`\n${entry.displayName} (${entry.eiaIds.length} EIA entit${entry.eiaIds.length === 1 ? 'y' : 'ies'})`);
   const entities = [];
   const rawFeatures = [];
