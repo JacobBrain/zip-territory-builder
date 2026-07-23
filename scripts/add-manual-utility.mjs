@@ -1,6 +1,10 @@
 /**
  * Adds a manually-authored utility to the /utility map from a config file.
  *
+ * Full end-to-end runbook: the "meg-utility-map-update" skill in the
+ * ArachnidWorks marketplace (arachnidworks/aw-claude-marketplace →
+ * plugins/meg-utility-map). This script is the executable piece it drives.
+ *
  * Use this for utilities that have NO fetchable federal service-territory
  * polygon — typically because they merged into another utility and their own
  * EIA-861 filing was retired (e.g. Gulf Power -> FPL, 2021). The territory is

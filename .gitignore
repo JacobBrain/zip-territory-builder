@@ -43,9 +43,8 @@ yarn-error.log*
 # ZIP-to-city lookup data (generated via prebuild script)
 /public/data/
 
-# claude code (keep shared skills tracked; ignore local settings/state)
-.claude/*
-!.claude/skills/
+# claude code
+.claude/
 
 # typescript
 *.tsbuildinfo
